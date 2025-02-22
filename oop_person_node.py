@@ -2,16 +2,19 @@ import random
 
 class OOPPersonNode:
     GENDER = [
-        "Female", "Male", "Non-Binary"
+        "Female", "Male", "NonBinary"
     ]
     AGE_CATEGORIES = {
-            (16, 19): "young",
-            (20, 29): "young_adult",
-            (30, 39): "adult",
-            (40, 49): "mid_adult",
-            (50, 59): "senior_adult",
-            (60, 120): "elderly"
+            (16, 19): "Young",
+            (20, 29): "YoungAdult",
+            (30, 39): "Adult",
+            (40, 49): "MidAdult",
+            (50, 59): "SeniorAdult",
+            (60, 120): "Elderly"
     }
+    BODY_SHAPES = [
+            "Slim", "Athletic", "Average", "Heavy", "Curvy", "Chubby", "Hourglass", "Muscular"
+    ]
     def __init__(self):
         self.name = "Person"
 
@@ -20,6 +23,7 @@ class OOPPersonNode:
         return {
             "required": {
                 "age": ("INT", {"default": 25, "min": 16, "max": 120, "step": 1}),
+                "body_shape": (cls.BODY_SHAPES, {"default": "Average"}),
                 "randomize": ("BOOLEAN", {"default": False}),
                 "gender": (cls.GENDER,),
             },
@@ -43,11 +47,11 @@ class OOPPersonNode:
                 return category
         return "unknown"  # For ages that don't fall into any category
 
-    def generate_person(self, age, gender, hair, eyes, mouth, poses, clothing, randomize):
+    def generate_person(self, gender, age, body_shape, hair, eyes, mouth, poses, clothing, randomize):
         if randomize:
             age = random.randint(16, 99)
         age_category = self.get_age_category(age)
-        person_info = f"gender:{gender}, age:{age_category}"
+        person_info = f" bodyShape:{body_shape}, gender:{gender}, age:{age_category}"
         if hair.strip():
             person_info += f", Hair({hair})"
         if eyes.strip():

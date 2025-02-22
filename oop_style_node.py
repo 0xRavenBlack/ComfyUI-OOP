@@ -1,16 +1,16 @@
 class OOPStyleNode:
     STYLES = [
-        " ",  "Photo_RAW", "Abstract", "Black_and_White", "Vintage", "Minimalist", "Pop_Art",
-        "Watercolor", "Oil_Painting", "Sketch", "Cartoon", "Impressionist", "Surrealist", "Realistic",
-        "Futuristic", "Cyberpunk", "Gothic", "Grunge", "Film_Noir", "Art_Deco", "Modernist", "Boho", "Paper_cut",
-        "Neon", "Retro", "Lomo", "Pixel_Art", "Glitch", "3D_Rendering", "HDR", "Fantasy", "Street_Photography"
+        " ",  "PhotoRAW", "Abstract", "BlackAndWhite", "Vintage", "Minimalist", "PopArt",
+        "Watercolor", "OilPainting", "Sketch", "Cartoon", "Impressionist", "Surrealist", "Realistic",
+        "Futuristic", "Cyberpunk", "Gothic", "Grunge", "FilmNoir", "ArtDeco", "Modernist", "Boho", "PaperCut",
+        "Neon", "Retro", "Lomo", "PixelArt", "Glitch", "3DRendering", "HDR", "Fantasy", "StreetPhotography"
     ]
 
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "base_style": (cls.STYLES, {"default": "Photo_RAW"}),
+                "base_style": (cls.STYLES, {"default": "PhotoRAW"}),
             },
             "optional": {
                 "second_style": (cls.STYLES, {"default": " "}),

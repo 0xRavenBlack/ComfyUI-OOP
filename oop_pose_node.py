@@ -3,24 +3,24 @@ import random
 class OOPPoseNode:
     BASE_POSES = [
         "Sitting", "Stand", "Squat", "Grovel", "Lie", "Jump", "Run", "Walk", "Fly",
-        "Head_tilt", "Looking_back", "Looking_down", "Looking_up", "Smelling", "Sleeping",
-        "Bathing", "aiming_at_viewer", "stretching", "hands_on_hips", "breasts_rest_on_table",
-        "hug_from_behind", "leaning_forward", "selfie"
+        "HeadTilt", "LookingBack", "LookingDown", "LookingUp", "Smelling", "Sleeping",
+        "Bathing", "AimingAtViewer", "Stretching", "HandsOnHips", "BreastsRestOnTable",
+        "HugFromBehind", "LeaningForward", "Selfie"
     ]
 
     HAND_POSES = [
-        "Hand_to_mouth", "Arm_at_side", "Arms_behind_head", "Arms_behind_back", "Hand_on_own_chest",
-        "Arms_crossed", "Hand_on_hips", "Hand_on_hip", "Hands_up", "Stretch", "Armpits",
-        "Leg_hold", "Grabbing", "Holding", "Fingersmile", "Hair_pull", "Hair_scrunchie",
-        "Peace_symbol", "Salute", "Thumbs_up", "Middle_finger", "Cat_pose", "Finger_gun",
-        "Waving", "Spread_arms"
+        "HandToMouth", "ArmAtSide", "ArmsBehindHead", "ArmsBehindBack", "HandOnOwnChest",
+        "ArmsCrossed", "HandOnHips", "HandOnHip", "HandsUp", "Stretch", "Armpits",
+        "LegHold", "Grabbing", "Holding", "Fingersmile", "HairPull", "HairScrunchie",
+        "PeaceSymbol", "Salute", "ThumbsUp", "MiddleFinger", "CatPose", "FingerGun",
+        "Waving", "SpreadArms"
     ]
 
     LEG_POSES = [
-        "Spread_legs", "Crossed_legs", "Fetal_position", "Leg_lift", "Legs_up", "Leaning_forward",
-        "Against_wall", "On_stomach", "Seiza", "Wariza-W-sitting", "Yokozuwari", "Indian_style",
-        "Leg_hug", "Straddling", "Kneeling", "Arm_support", "feet_up", "one_knee",
-        "standing_on_one_leg", "knees_up"
+        "SpreadLegs", "CrossedLegs", "FetalPosition", "LegLift", "LegsUp", "LeaningForward",
+        "AgainstWall", "OnStomach", "Seiza", "WarizaWSitting", "Yokozuwari", "IndianStyle",
+        "LegHug", "Straddling", "Kneeling", "ArmSupport", "FeetUp", "OneKnee",
+        "StandingOnOneLeg", "KneesUp"
     ]
 
 
@@ -33,7 +33,7 @@ class OOPPoseNode:
             "required": {
                 "base_pose": (cls.BASE_POSES, {"default": "Stand"}),
                 "hand_pose": (cls.HAND_POSES, {"default": "Stretch"}),
-                "leg_pose": (cls.LEG_POSES, {"default": "Against_wall"}),
+                "leg_pose": (cls.LEG_POSES, {"default": "AgainstWall"}),
             },
             "optional": {
                 "randomize": ("BOOLEAN", {"default": False}),

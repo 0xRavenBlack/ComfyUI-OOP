@@ -2,7 +2,7 @@ import random
 
 class OOPClothingNode:
     UPPER_GARMENT_TYPES = [
-        "Nude", "T-shirt", "Sweater", "Jacket", "Shirt", "Blouse", "Hoodie", "Coat", "Tank Top", "Vest"
+        "Nude", "TShirt", "Sweater", "Jacket", "Shirt", "Blouse", "Hoodie", "Coat", "TankTop", "Vest"
     ]
     LOWER_GARMENT_TYPES = [
         "Nude", "Jeans", "Shorts", "Skirt", "Trousers", "Leggings", "Sweatpants", "Cargo Pants", "Chinos", "Dress"
@@ -24,7 +24,7 @@ class OOPClothingNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "upper_type": (cls.UPPER_GARMENT_TYPES, {"default": "T-shirt"}),
+                "upper_type": (cls.UPPER_GARMENT_TYPES, {"default": "Sweater"}),
                 "lower_type": (cls.LOWER_GARMENT_TYPES, {"default": "Jeans"}),
             },
             "optional": {

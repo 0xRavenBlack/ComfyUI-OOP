@@ -3,12 +3,12 @@ class OOPNode:
     def INPUT_TYPES(cls):
         return {
             "optional": {
-                "style": ("OOP_STYLE", {"forceInput": True, "default": ""}),
-                "person": ("OOP_PERSON", {"forceInput": True, "default": ""}),
-                "view": ("STRING", {"forceInput": True, "default": ""}),
-                "location": ("STRING", {"forceInput": True, "default": ""}),
-                "time": ("STRING", {"forceInput": True, "default": ""}),
-                "sky": ("STRING", {"forceInput": True, "default": ""})
+                "Style": ("OOP_STYLE", {"forceInput": True, "default": ""}),
+                "Person": ("OOP_PERSON", {"forceInput": True, "default": ""}),
+                "View": ("STRING", {"forceInput": True, "default": ""}),
+                "Location": ("STRING", {"forceInput": True, "default": ""}),
+                "Time": ("STRING", {"forceInput": True, "default": ""}),
+                "Sky": ("STRING", {"forceInput": True, "default": ""})
             }
         }
 
