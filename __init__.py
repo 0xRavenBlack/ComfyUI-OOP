@@ -11,7 +11,8 @@ node_list = [ #Add list of .py files containing nodes here
     "oop_mouth_node",
     "oop_eyes_node",
     "oop_pose_node",
-    "oop_style_node"
+    "oop_style_node",
+    "oop_view_node"
 ]
 
 NODE_CLASS_MAPPINGS = {}

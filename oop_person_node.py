@@ -15,6 +15,14 @@ class OOPPersonNode:
     BODY_SHAPES = [
             "Slim", "Athletic", "Average", "Heavy", "Curvy", "Chubby", "Hourglass", "Muscular"
     ]
+    ETHNICITIES = [
+        "African",
+        "Asian",
+        "Caucasian",
+        "Latino",
+        "Pacific",
+        "Alien"
+    ]
     def __init__(self):
         self.name = "Person"
 
@@ -24,11 +32,11 @@ class OOPPersonNode:
             "required": {
                 "age": ("INT", {"default": 25, "min": 16, "max": 120, "step": 1}),
                 "body_shape": (cls.BODY_SHAPES, {"default": "Average"}),
+                "ethnicitie": (cls.ETHNICITIES, {"default": "Asian"}),
                 "randomize": ("BOOLEAN", {"default": False}),
                 "gender": (cls.GENDER,),
             },
             "optional": {
-
                 "hair": ("OOP_HAIR", {"forceInput": True, "default": ""}),
                 "eyes": ("OOP_EYES", {"forceInput": True, "default": ""}),
                 "mouth": ("OOP_MOUTH", {"forceInput": True, "default": ""}),
@@ -47,11 +55,11 @@ class OOPPersonNode:
                 return category
         return "unknown"  # For ages that don't fall into any category
 
-    def generate_person(self, gender, age, body_shape, hair, eyes, mouth, poses, clothing, randomize):
+    def generate_person(self, gender, age, body_shape, hair, eyes, ethnicitie, mouth, poses, clothing, randomize):
         if randomize:
             age = random.randint(16, 99)
         age_category = self.get_age_category(age)
-        person_info = f" bodyShape:{body_shape}, gender:{gender}, age:{age_category}"
+        person_info = f" bodyShape:{body_shape}, gender:{gender}, age:{age_category}, ethnicitie:{ethnicitie}"
         if hair.strip():
             person_info += f", Hair({hair})"
         if eyes.strip():
@@ -59,7 +67,7 @@ class OOPPersonNode:
         if eyes.strip():
             person_info += f", Mouth({mouth})"
         if eyes.strip():
-            person_info += f", Clothing({clothing})"
+            person_info += f", Clothes({clothing})"
         if poses.strip():
             person_info += f", Poses({poses})"
         return (person_info,)

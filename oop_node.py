@@ -7,8 +7,8 @@ class OOPNode:
                 "Style": ("OOP_STYLE", {"forceInput": True, "default": ""}),
             },
             "optional": {
+                "View": ("OOP_VIEW", {"forceInput": True, "default": ""}),
                 "Person": ("OOP_PERSON", {"forceInput": True, "default": ""}),
-                "View": ("STRING", {"forceInput": True, "default": ""}),
                 "Location": ("STRING", {"forceInput": True, "default": ""}),
                 "Time": ("STRING", {"forceInput": True, "default": ""}),
                 "Sky": ("STRING", {"forceInput": True, "default": ""})
@@ -19,46 +19,41 @@ class OOPNode:
     FUNCTION = "create_prompt"
     CATEGORY = "Object-Oriented Prompting"
 
-    def create_prompt(self, Clip, Style, Person="", View="", Location="", Time="", Sky=""):
-        clip_skip = -2
-        prompt=""
-        if Style:
-            prompt+=f"Style({Style})"
-        if Person != "":
-            prompt+=f" ,Person({Person})"
-        if View != "":
-            prompt+=f" ,View({View})"
-        if Location != "":
-            prompt+=f" ,Location({Location})"
-        if Time != "":
-            prompt+=f" ,Location({Time})"
-        if Sky != "":
-            prompt+=f" ,Location({Sky})"
+    def create_prompt(self, Clip, Style, View="", Person="", Location="", Time="", Sky=""):
+        clip_skip = -3
+        prompt_parts = []
+        if Style: prompt_parts.append(f"Style({Style})")
+        if View: prompt_parts.append(f"View({View})")
+        if Person: prompt_parts.append(f"Person({Person})")
+        if Location: prompt_parts.append(f"Location({Location})")
+        if Time: prompt_parts.append(f"Time({Time})")
+        if Sky: prompt_parts.append(f"Sky({Sky})")
+        prompt = ", ".join(prompt_parts)
 
+        # Apply CLIP skip
         Clip.clip_layer(clip_skip)
-
-        tokenized_text = prompt.replace(" ", "")
-        # Tokenize with compatibility
-        try:
-            # Try modern SDLongClipModel syntax
-            tokens = Clip.tokenize(tokenized_text, truncate=False)
-        except TypeError:
-            # Fallback for standard CLIP
-            tokens = Clip.tokenize(tokenized_text)
-
-         # Encode text using CLIP
+        # Tokenize and process G/L prompts
+        tokens = Clip.tokenize(prompt)
+        tokens["l"] = Clip.tokenize(prompt)["l"]
+        if len(tokens["l"]) != len(tokens["g"]):
+            empty = Clip.tokenize("")
+            while len(tokens["l"]) < len(tokens["g"]):
+                tokens["l"] += empty["l"]
+            while len(tokens["l"]) > len(tokens["g"]):
+                tokens["g"] += empty["g"]
+        # Encode tokens
         cond, pooled = Clip.encode_from_tokens(tokens, return_pooled=True)
-        # Format conditioning output
-        conditioning = [[
-                    cond, {
-                        "pooled_output": pooled,
-                        "clip_skip": clip_skip,
-                        "token_normalization": "mean",
-                        "original_size": (1024, 1024),
-                        "crop_coords": (0, 0),
-                    }
-                ]]
-        return (conditioning, prompt,)
+
+        return ([[
+            cond,
+                {
+                "pooled_output": pooled,
+                "clip_skip": clip_skip,
+                "original_size": (1024, 1024),
+                 "crop_coords": (0, 0),
+                "target_size": (1024, 1024)
+                 }
+             ]], prompt)
 
 NODE_CLASS_MAPPINGS = {
     "OOPNode": OOPNode
