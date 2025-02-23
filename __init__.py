@@ -13,7 +13,8 @@ node_list = [ #Add list of .py files containing nodes here
     "oop_pose_node",
     "oop_style_node",
     "oop_view_node",
-    "oop_location_node"
+    "oop_location_node",
+    "oop_animal_node"
 ]
 
 NODE_CLASS_MAPPINGS = {}

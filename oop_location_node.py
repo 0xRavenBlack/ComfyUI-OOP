@@ -2,11 +2,11 @@ import random
 
 class OOPLocationNode:
     PLACES = [
-        "Forest", "City", "Desert", "Mountain", "Beach", "Cave", "Village", "Castle", "Temple", "SpaceStation", "Shop", "Club", "Bar"
+        "Forest", "City", "Desert", "Mountain", "Beach", "Cave", "Village", "Castle", "Temple", "SpaceStation", "Shop", "Club", "Bar", "Office", "BedRoom", "Citchen"
     ]
 
     OBJECTS = [
-        "Statue", "Tree", "Fountain", "Bridge", "Car", "House", "Bench", "Streetlamp", "Signpost", "Tower", "AdultToy", "Toy", "Laptop"
+        "Statue", "Tree", "Fountain", "Bridge", "Car", "House", "Bench", "Streetlamp", "Signpost", "Tower", "AdultToy", "Toy", "Laptop", "CookingUtensils", "Doll"
     ]
 
     def __init__(self):

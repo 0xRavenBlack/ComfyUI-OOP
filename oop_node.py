@@ -13,6 +13,7 @@ class OOPNode:
             "optional": {
                 "View": ("OOP_VIEW", {"forceInput": True, "default": ""}),
                 "Person": ("OOP_PERSON", {"forceInput": True, "default": ""}),
+                "Animal": ("OOP_ANIMAL", {"forceInput": True, "default": ""}),
                 "Location": ("OOP_LOCATION", {"forceInput": True, "default": ""}),
                 "Time": ("STRING", {"forceInput": True, "default": ""}),
                 "Sky": ("STRING", {"forceInput": True, "default": ""})
@@ -59,12 +60,13 @@ class OOPNode:
         response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
         return response
 
-    def create_prompt(self, Clip, Style, View="", Person="", Location="", Time="", Sky=""):
+    def create_prompt(self, Clip, Style, View="", Person="", Animal="", Location="", Time="", Sky=""):
         clip_skip = -3
         prompt_parts = []
         if Style: prompt_parts.append(f"Style({Style})")
         if View: prompt_parts.append(f"View({View})")
         if Person: prompt_parts.append(f"Person({Person})")
+        if Animal: prompt_parts.append(f"Animal({Animal})")
         if Location: prompt_parts.append(f"Location({Location})")
         if Time: prompt_parts.append(f"Time({Time})")
         if Sky: prompt_parts.append(f"Sky({Sky})")

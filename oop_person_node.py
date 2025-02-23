@@ -13,7 +13,7 @@ class OOPPersonNode:
             (60, 120): "Elderly"
     }
     BODY_SHAPES = [
-            "Slim", "Athletic", "Average", "Heavy", "Curvy", "Chubby", "Hourglass", "Muscular"
+            "Slim", "Athletic", "Average", "Curvy", "Chubby", "Fat", "Hourglass", "Muscular"
     ]
     ETHNICITIES = [
         "African",
