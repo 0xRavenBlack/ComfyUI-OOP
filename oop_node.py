@@ -1,3 +1,7 @@
+import gc
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
 class OOPNode:
     @classmethod
     def INPUT_TYPES(cls):
@@ -9,7 +13,7 @@ class OOPNode:
             "optional": {
                 "View": ("OOP_VIEW", {"forceInput": True, "default": ""}),
                 "Person": ("OOP_PERSON", {"forceInput": True, "default": ""}),
-                "Location": ("STRING", {"forceInput": True, "default": ""}),
+                "Location": ("OOP_LOCATION", {"forceInput": True, "default": ""}),
                 "Time": ("STRING", {"forceInput": True, "default": ""}),
                 "Sky": ("STRING", {"forceInput": True, "default": ""})
             }
@@ -18,6 +22,42 @@ class OOPNode:
     RETURN_TYPES = ("CONDITIONING", "STRING",)
     FUNCTION = "create_prompt"
     CATEGORY = "Object-Oriented Prompting"
+
+    def _process_prompt(self, prompt):
+        device="cuda"
+        model_name = "Qwen/Qwen2.5-0.5B-Instruct"
+        model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                device_map=device,
+                torch_dtype="auto",
+        )
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        system_prompt = (
+            "Transform concepts into concise, high-detail Stable Diffusion XL prompts. "
+            "Use vivid descriptors for *subject, style/medium, composition, lighting/colors, and key details* "
+            "(e.g., 'ultra-realistic', 'cinematic lighting', 'vivid neon'). Structure as: "
+            "`[Subject/action], [style/medium], [lighting/colors], [composition], [specific details], [technical terms]`."
+        )
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt},
+        ]
+        text = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+        model_inputs = tokenizer([text], return_tensors="pt").to(device)
+
+        generated_ids = model.generate(
+            **model_inputs,
+            max_new_tokens=512
+        )
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
+        response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        return response
 
     def create_prompt(self, Clip, Style, View="", Person="", Location="", Time="", Sky=""):
         clip_skip = -3
@@ -28,7 +68,12 @@ class OOPNode:
         if Location: prompt_parts.append(f"Location({Location})")
         if Time: prompt_parts.append(f"Time({Time})")
         if Sky: prompt_parts.append(f"Sky({Sky})")
-        prompt = ", ".join(prompt_parts)
+        oop_prompt = ", ".join(prompt_parts)
+        prompt = self._process_prompt(oop_prompt)
+
+        # Force garbage collection
+        gc.collect()
+        torch.cuda.empty_cache()
 
         # Apply CLIP skip
         Clip.clip_layer(clip_skip)
