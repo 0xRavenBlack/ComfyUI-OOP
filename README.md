@@ -1,8 +1,12 @@
 # ComfyUI OOP Nodes
 This project contains a set of **ComfyUI OOP Nodes** that allow users to build detailed, object-oriented prompts with customizable visual attributes for characters, environments, and scenes. These nodes are designed to provide an intuitive way to generate and control different elements such as person attributes, hairstyles, eyes, locations, and poses. The **randomize** function allows for dynamic generation, enabling users to randomize different visual elements such as eye color, hairstyle, body shape, and more, providing endless possibilities for character creation and scene design.
 
+![Prompt Demo](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/prompt.png?raw=true)
+
 ## Features
 Available Nodes
+
+![Demo Workflow](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/workflow.png?raw=true)
 
 ### OOP Hair Node 🦰
 Allows customization of hair color, style, and optional secondary color.
