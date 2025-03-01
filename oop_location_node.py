@@ -6,7 +6,11 @@ class OOPLocationNode:
     ]
 
     OBJECTS = [
-        "Statue", "Tree", "Fountain", "Bridge", "Car", "House", "Bench", "Streetlamp", "Signpost", "Tower", "AdultToy", "Toy", "Laptop", "CookingUtensils", "Doll"
+        "Statue", "Tree", "Fountain", "Bridge", "Car", "House", "Bench",
+        "Streetlamp", "Signpost", "Tower", "AdultToy", "Toy", "Laptop",
+        "CookingUtensils", "Doll", "Chair", "Book", "Computer", "Cup",
+        "Lamp", "Piano", "Clock", "Guitar", "Sofa", "Desk", "Fridge",
+        "Television", "Microwave", "WashingMachine", "Toothbrush", "Rug"
     ]
 
     def __init__(self):
