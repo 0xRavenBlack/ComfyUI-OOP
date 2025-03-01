@@ -2,13 +2,18 @@ import random
 
 class OOPMouthNode:
     MOUTH_SHAPES = [
-        "Round", "Wide", "Thin", "Full", "Heart", "Smile", "Frown", "Neutral", "Angled", "Downturned"
+        "Round", "Wide", "Thin", "Full", "Heart", "Smile", "Frown", "Neutral",
+        "Angled", "Downturned", "Oval", "Pointed", "Pout", "Curved", "Smirk",
+        "Straight", "Upturned", "Chiseled", "Wide Smile", "Drooping"
     ]
+
     MOUTH_SIZES = [
-        " ", "Small", "Medium", "Large"
+        " ", "Small", "Medium", "Large", "Tiny", "Huge", "Petite", "Gigantic"
     ]
+
     MOUTH_OPENINGS = [
-        " ", "Closed", "Slightly", "Wide"
+        " ", "Closed", "Slightly", "Wide", "Open", "Partially Open", "Fully Open",
+        "Gaping", "Barely Open"
     ]
 
     def __init__(self):
