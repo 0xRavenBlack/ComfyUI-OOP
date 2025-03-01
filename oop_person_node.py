@@ -30,7 +30,7 @@ class OOPPersonNode:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "age": ("INT", {"default": 25, "min": 16, "max": 120, "step": 1}),
+                "age": ("INT", {"default": 25, "min": 18, "max": 120, "step": 1}),
                 "body_shape": (cls.BODY_SHAPES, {"default": "Average"}),
                 "ethnicity": (cls.ETHNICITIES, {"default": "Asian"}),
                 "randomize": ("BOOLEAN", {"default": False}),
