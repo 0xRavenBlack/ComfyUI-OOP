@@ -5,7 +5,7 @@ class OOPPersonNode:
         "Female", "Male", "NonBinary"
     ]
     AGE_CATEGORIES = {
-        (16, 19): "16-19Years",
+        (16, 19): "18-19Years",
         (20, 29): "20-29Years",
         (30, 39): "30-39Years",
         (40, 49): "40-49Years",
