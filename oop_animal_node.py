@@ -2,15 +2,21 @@ import random
 
 class OOPAnimalNode:
     ANIMAL_TYPES = [
-        "Horse", "Cat", "Dog", "Elephant", "Lion", "Tiger", "Bear", "Monkey", "Snake"
+        "Horse", "Cat", "Dog", "Elephant", "Lion", "Tiger", "Bear", "Monkey",
+        "Snake", "Giraffe", "Kangaroo", "Wolf", "Rabbit", "Zebra", "Cheetah",
+        "Penguin", "Koala", "Panda", "Alligator", "Leopard", "Horse", "Frog"
     ]
 
     COLORS = [
-        "Black", "White", "Brown", "Golden", "Gray", "Spotted", "Striped", "Red"
+        "Black", "White", "Brown", "Golden", "Gray", "Spotted", "Striped", "Red",
+        "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Beige", "Silver",
+        "Turquoise", "Turquoise", "Lavender", "Teal"
     ]
 
     ACTIONS = [
-        "Jumping", "Lying", "Running", "Sleeping", "Playing", "Eating", "Roaring", "Climbing", "Teasing"
+        "Jumping", "Lying", "Running", "Sleeping", "Playing", "Eating", "Roaring",
+        "Climbing", "Teasing", "Swimming", "Hiding", "Flying", "Chasing", "Barking",
+        "Meowing", "Purring", "Galloping", "Howling", "Scratching", "Biting", "Sniffing"
     ]
 
     def __init__(self):
