@@ -1,8 +1,14 @@
 class OOPViewNode:
-    # Predefined angle descriptions for consistency
-    ANGLE_DESCRIPTIONS = ["Normal", "High", "Low"]
+    ANGLE_DESCRIPTIONS = [
+        "Normal", "High", "Low", "Upward", "Downward", "Side", "Tilted",
+        "Diagonal", "EyeLevel", "Bird's Eye", "Worm's Eye", "Dutch Angle", "Overhead"
+    ]
     # Predefined view types for consistency
-    VIEW_TYPES = ["Closeup", "Portrait", "FullBody", "Landscape", "Panorama"]
+    VIEW_TYPES = [
+        "Closeup", "Portrait", "FullBody", "Landscape", "Panorama", "WideAngle",
+        "Macro", "MediumShot", "LongShot", "Establishing", "Aerial", "Profile",
+        "ActionShot", "Over-the-Shoulder", "Extreme Closeup"
+    ]
 
     def __init__(self):
         self.name = "View"
