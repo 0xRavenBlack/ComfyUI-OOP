@@ -2,10 +2,14 @@ import random
 
 class OOPClothingNode:
     UPPER_GARMENT_TYPES = [
-        "Nude", "TShirt", "Sweater", "Jacket", "Shirt", "Blouse", "Hoodie", "Coat", "TankTop", "Vest"
+        "Nude", "TShirt", "Sweater", "Jacket", "Shirt", "Blouse", "Hoodie",
+        "Coat", "TankTop", "Vest", "Cardigan", "Poncho", "Kimono", "Polo",
+        "ButtonDown", "CropTop", "Jumper", "Raincoat", "Parka"
     ]
     LOWER_GARMENT_TYPES = [
-        "Nude", "Jeans", "Shorts", "Skirt", "Trousers", "Leggings", "Sweatpants", "Cargo Pants", "Chinos", "Dress"
+        "Nude", "Jeans", "Shorts", "Skirt", "Trousers", "Leggings", "Sweatpants",
+        "Cargo Pants", "Chinos", "Dress", "Short Skirt", "Overalls", "Capri Pants",
+        "Joggers", "Palazzo Pants", "Dungarees", "Culottes", "Mini Skirt", "Maxi Skirt"
     ]
     COLORS = [
         " ", "Black", "White", "Gray", "Red", "Blue", "Green", "Yellow", "Pink", "Purple", "Brown", "Beige", "Orange"
