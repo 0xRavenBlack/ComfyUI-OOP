@@ -27,7 +27,7 @@ class OOPViewNode:
         if backgroundBlur:
             background = "Blur"
         # Return a formatted string summarizing the view properties
-        return (f"type:{viewType}, angle:{angle}, background:{background}",)
+        return (f"shot:{viewType}, angle:{angle}, background:{background}",)
 
     @classmethod
     def IS_CHANGED(cls, angle, viewType, backgroundBlur):

@@ -1,6 +1,4 @@
 import gc
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class OOPNode:
     @classmethod
@@ -27,7 +25,7 @@ class OOPNode:
         clip_skip = -2
         prompt_parts = []
         if Style: prompt_parts.append(f"Style: {Style}")
-        if View: prompt_parts.append(f"Viewport: {View}")
+        if View: prompt_parts.append(f"Perspective: {View}")
         if Person: prompt_parts.append(f"Person: {Person}")
         if Animal: prompt_parts.append(f"Animal: {Animal}")
         if Location: prompt_parts.append(f"Location: {Location}")
@@ -36,7 +34,6 @@ class OOPNode:
 
         # Force garbage collection
         gc.collect()
-        torch.cuda.empty_cache()
 
         # Apply CLIP skip
         Clip.clip_layer(clip_skip)

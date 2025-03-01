@@ -2,7 +2,7 @@ import random
 
 class OOPPersonNode:
     GENDER = [
-        "Female", "Male", "NonBinary"
+        "Female", "Male", "Androgynous"
     ]
     AGE_CATEGORIES = {
         (16, 19): "18-19Years",
