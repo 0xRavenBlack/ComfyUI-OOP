@@ -41,7 +41,7 @@ ComfyUI (This set of nodes is designed to be used in the ComfyUI environment)
 
 Clone the repository:
 
-    git clone https://github.com/yourusername/comfyui-nodes.git
+    git clone https://github.com/0xRavenBlack/ComfyUI-OOP
 
 Restart ComfyUI to load the new nodes.
 
