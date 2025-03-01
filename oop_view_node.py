@@ -1,6 +1,6 @@
 class OOPViewNode:
     # Predefined angle descriptions for consistency
-    ANGLE_DESCRIPTIONS = ["Normal", "Dutch", "High", "Low"]
+    ANGLE_DESCRIPTIONS = ["Normal", "High", "Low"]
     # Predefined view types for consistency
     VIEW_TYPES = ["Closeup", "Portrait", "FullBody", "Landscape", "Panorama"]
 

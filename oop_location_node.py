@@ -2,7 +2,7 @@ import random
 
 class OOPLocationNode:
     PLACES = [
-        "Forest", "City", "Desert", "Mountain", "Beach", "Cave", "Village", "Castle", "Temple", "SpaceStation", "Shop", "Club", "Bar", "Office", "BedRoom", "Citchen"
+        "Forest", "City", "Desert", "Mountain", "Beach", "Cave", "Village", "Castle", "Temple", "SpaceStation", "Shop", "Club", "Bar", "Office", "BedRoom", "Kitchen"
     ]
 
     OBJECTS = [

@@ -15,8 +15,7 @@ class OOPNode:
                 "Person": ("OOP_PERSON", {"forceInput": True, "default": ""}),
                 "Animal": ("OOP_ANIMAL", {"forceInput": True, "default": ""}),
                 "Location": ("OOP_LOCATION", {"forceInput": True, "default": ""}),
-                "Time": ("STRING", {"forceInput": True, "default": ""}),
-                "Sky": ("STRING", {"forceInput": True, "default": ""})
+                "Environment": ("OOP_ENVIRONMENT", {"forceInput": True, "default": ""})
             }
         }
 
@@ -24,54 +23,16 @@ class OOPNode:
     FUNCTION = "create_prompt"
     CATEGORY = "Object-Oriented Prompting"
 
-    def _process_prompt(self, prompt):
-        device="cuda"
-        model_name = "Qwen/Qwen2.5-0.5B-Instruct"
-        model = AutoModelForCausalLM.from_pretrained(
-                model_name,
-                device_map=device,
-                torch_dtype="auto",
-        )
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        system_prompt = (
-            "Transform concepts into concise, high-detail Stable Diffusion XL prompts. "
-            "Use vivid descriptors for *subject, style/medium, composition, lighting/colors, and key details* "
-            "(e.g., 'ultra-realistic', 'cinematic lighting', 'vivid neon'). Structure as: "
-            "`[Subject/action], [style/medium], [lighting/colors], [composition], [specific details], [technical terms]`."
-        )
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt},
-        ]
-        text = tokenizer.apply_chat_template(
-            messages,
-            tokenize=False,
-            add_generation_prompt=True
-        )
-        model_inputs = tokenizer([text], return_tensors="pt").to(device)
-
-        generated_ids = model.generate(
-            **model_inputs,
-            max_new_tokens=512
-        )
-        generated_ids = [
-            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
-        ]
-        response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-        return response
-
-    def create_prompt(self, Clip, Style, View="", Person="", Animal="", Location="", Time="", Sky=""):
-        clip_skip = -3
+    def create_prompt(self, Clip, Style, View="", Person="", Animal="", Location="", Environment=""):
+        clip_skip = -2
         prompt_parts = []
-        if Style: prompt_parts.append(f"Style({Style})")
-        if View: prompt_parts.append(f"View({View})")
-        if Person: prompt_parts.append(f"Person({Person})")
-        if Animal: prompt_parts.append(f"Animal({Animal})")
-        if Location: prompt_parts.append(f"Location({Location})")
-        if Time: prompt_parts.append(f"Time({Time})")
-        if Sky: prompt_parts.append(f"Sky({Sky})")
-        oop_prompt = ", ".join(prompt_parts)
-        prompt = self._process_prompt(oop_prompt)
+        if Style: prompt_parts.append(f"Style: {Style}")
+        if View: prompt_parts.append(f"Viewport: {View}")
+        if Person: prompt_parts.append(f"Person: {Person}")
+        if Animal: prompt_parts.append(f"Animal: {Animal}")
+        if Location: prompt_parts.append(f"Location: {Location}")
+        if Environment: prompt_parts.append(f"Environment: {Environment}")
+        prompt = "\n".join(prompt_parts)
 
         # Force garbage collection
         gc.collect()

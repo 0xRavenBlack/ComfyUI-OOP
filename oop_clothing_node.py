@@ -40,15 +40,13 @@ class OOPClothingNode:
             lower_color = random.choice(self.COLORS[1:])
 
         # Build garment details, excluding options set to " "
-        upper_garment = f"Top(garment:{upper_type}"
+        upper_garment = f"Top::Garment:{upper_type}"
         if upper_color != " " and upper_type != "Nude":
             upper_garment += f", color:{upper_color}"
-        upper_garment += ")"
 
-        lower_garment = f"Bottom(garment:{lower_type}"
+        lower_garment = f"Bottom::Garment:{lower_type}"
         if lower_color != " " and lower_type != "Nude":
             lower_garment += f", color:{lower_color}"
-        lower_garment += ")"
 
         return (f"{upper_garment}, {lower_garment}",)
 

@@ -38,7 +38,7 @@ class OOPAnimalNode:
             animal_type = random.choice(self.ANIMAL_TYPES)
             color = random.choice(self.COLORS)
             action = random.choice(self.ACTIONS)
-        return (f"Animal: {animal_type}, Color: {color}, Action: {action}",)
+        return (f"type:{animal_type}, color: {color}, action:{action}",)
 
     @classmethod
     def IS_CHANGED(cls, animal_type, color, action, randomize):

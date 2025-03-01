@@ -5,15 +5,15 @@ class OOPPersonNode:
         "Female", "Male", "NonBinary"
     ]
     AGE_CATEGORIES = {
-            (16, 19): "Young",
-            (20, 29): "YoungAdult",
-            (30, 39): "Adult",
-            (40, 49): "MidAdult",
-            (50, 59): "SeniorAdult",
-            (60, 120): "Elderly"
+        (16, 19): "16-19Years",
+        (20, 29): "20-29Years",
+        (30, 39): "30-39Years",
+        (40, 49): "40-49Years",
+        (50, 59): "50-59Years",
+        (60, 120): "60+Years"
     }
     BODY_SHAPES = [
-            "Slim", "Athletic", "Average", "Curvy", "Chubby", "Fat", "Hourglass", "Muscular"
+            "Slim", "Athletic", "Average", "Curvy", "Chubby", "Hourglass", "Muscular"
     ]
     ETHNICITIES = [
         "African",
@@ -32,7 +32,7 @@ class OOPPersonNode:
             "required": {
                 "age": ("INT", {"default": 25, "min": 16, "max": 120, "step": 1}),
                 "body_shape": (cls.BODY_SHAPES, {"default": "Average"}),
-                "ethnicitie": (cls.ETHNICITIES, {"default": "Asian"}),
+                "ethnicity": (cls.ETHNICITIES, {"default": "Asian"}),
                 "randomize": ("BOOLEAN", {"default": False}),
                 "gender": (cls.GENDER,),
             },
@@ -55,22 +55,27 @@ class OOPPersonNode:
                 return category
         return "unknown"  # For ages that don't fall into any category
 
-    def generate_person(self, gender, age, body_shape, hair, eyes, ethnicitie, mouth, poses, clothing, randomize):
+    def generate_person(self, gender, age, body_shape, hair, eyes, ethnicity, mouth, poses, clothing, randomize):
         if randomize:
             age = random.randint(16, 99)
         age_category = self.get_age_category(age)
-        person_info = f" bodyShape:{body_shape}, gender:{gender}, age:{age_category}, ethnicitie:{ethnicitie}"
+        details = [
+                f"\n*  BodyShape: {body_shape}",
+                f"*  Gender: {gender}",
+                f"*  Age: {age_category}",
+                f"*  Ethnicity: {ethnicity}"
+            ]
         if hair.strip():
-            person_info += f", Hair({hair})"
+            details.append(f"*  Hair: {hair}")
         if eyes.strip():
-            person_info += f", Eyes({eyes})"
-        if eyes.strip():
-            person_info += f", Mouth({mouth})"
-        if eyes.strip():
-            person_info += f", Clothes({clothing})"
+            details.append(f"*  Eyes: {eyes}")
+        if mouth.strip():
+            details.append(f"*  Mouth: {mouth}")
+        if clothing.strip():
+            details.append(f"*  Clothes: {clothing}")
         if poses.strip():
-            person_info += f", Poses({poses})"
-        return (person_info,)
+            details.append(f"*  Poses: {poses}")
+        return ("\n".join(details),)
 
 NODE_CLASS_MAPPINGS = {
     "OOPPersonNode": OOPPersonNode
