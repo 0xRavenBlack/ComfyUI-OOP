@@ -37,7 +37,7 @@ Python 3.x
 ComfyUI (This set of nodes is designed to be used in the ComfyUI environment)
 #### Installation
 
-    cd comfyui-nodes
+    cd custom_nodes
 
 Clone the repository:
 
