@@ -45,6 +45,27 @@ Clone the repository:
 
 Restart ComfyUI to load the new nodes.
 
+#### Example
+For example, consider the following prompt using the new OOP syntax:
+```
+    Style: PhotoRAW, Cyberpunk
+    Perspective: shot:FullBody, angle:Dutch Angle, background:NoBlur
+    Person:
+    *  BodyShape: Athletic
+    *  Gender: Female
+    *  Age: 30-39Years
+    *  Ethnicity: Latino
+    *  Hair: color:OliveBeige, style:Ponytail
+    *  Eyes: shape:Round, color:Hazel
+    *  Mouth: shape:Full, size:Medium, opened:Slightly
+    *  Clothes: Top::Garment:Sweater, color:Red, Bottom::Garment:Sweatpants, color:Gray
+    *  Poses: body:Stand, hands:HandToMouth, legs:LegLift
+    Animal: type:Wolf, color: Purple, action:Playing
+    Location: location:Beach, object:Toy
+    Environment: time:Night, mood:FullMoon
+```
+![](https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/224701fb-4c3f-47d2-a90b-6d3ac8cd58cf/width=525/224701fb-4c3f-47d2-a90b-6d3ac8cd58cf.jpeg)Link to Image: [https://civitai.com/images/61040035](https://civitai.com/images/61040035)
+
 #### License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
