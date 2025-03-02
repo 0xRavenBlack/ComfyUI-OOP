@@ -1,0 +1,14 @@
+[project]
+name = "oop"
+description = "ComfyUI Node to create Object-Oriented Prompts"
+version = "1.0.0"
+license = {file = "LICENSE"}
+
+[project.urls]
+Repository = "https://github.com/0xRavenBlack/ComfyUI-OOP"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI-OOP"
+Icon = ""
