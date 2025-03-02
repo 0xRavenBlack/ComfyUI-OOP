@@ -9,6 +9,6 @@ Repository = "https://github.com/0xRavenBlack/ComfyUI-OOP"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "ravenblack"
 DisplayName = "ComfyUI-OOP"
 Icon = ""
