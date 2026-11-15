@@ -92,8 +92,6 @@ For example, consider the following prompt using the new OOP syntax:
     Environment: time:Night, mood:FullMoon
 ```
 
-The same prompt as rendered in ComfyUI: ![OOP prompt example](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/prompt.png?raw=true)
-
 #### License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
