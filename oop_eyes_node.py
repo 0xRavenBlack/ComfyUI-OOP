@@ -1,8 +1,9 @@
 import random
-from .oop_shared import NO_VALUE, format_pairs, random_value
+from comfy_api.latest import io
+from .oop_shared import NO_VALUE, format_pairs, random_value, OOP_EYES
 
 
-class OOPEyesNode:
+class OOPEyesNode(io.ComfyNode):
     EYE_SHAPES = [
         NO_VALUE, "Round", "Almond", "Hooded", "Monolid", "Upturned", "Downturned", "Oval", "Closed"
     ]
@@ -11,37 +12,28 @@ class OOPEyesNode:
     ]
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "shape": (cls.EYE_SHAPES, {"default": "Round"}),
-                "color": (cls.EYE_COLORS, {"default": "Brown"}),
-            },
-            "optional": {
-                "randomize": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    RETURN_TYPES = ("OOP_EYES",)
-    FUNCTION = "generate_eyes"
-    CATEGORY = "Object-Oriented Prompting"
-    DESCRIPTION = "Eye section of an object-oriented prompt: shape and colour. A blank option leaves that pair out of the prompt."
-    OUTPUT_TOOLTIPS = ("The eye section, ready to link into OOP Person or OOP Node.",)
-
-    def generate_eyes(self, shape, color, randomize=False):
-        if randomize:
-            shape = random_value(self.EYE_SHAPES)
-            color = random_value(self.EYE_COLORS)
-        return (format_pairs([("shape", shape), ("color", color)]),)
+    def define_schema(cls):
+        return io.Schema(
+            node_id="OOPEyesNode",
+            display_name="OOP Eyes 👀",
+            category="Object-Oriented Prompting",
+            description="Eye section of an object-oriented prompt: shape and colour. A blank option leaves that pair out of the prompt.",
+            inputs=[
+                io.Combo.Input("shape", options=cls.EYE_SHAPES, default="Round"),
+                io.Combo.Input("color", options=cls.EYE_COLORS, default="Brown"),
+                io.Boolean.Input("randomize", default=False),
+            ],
+            outputs=[OOP_EYES.Output("eyes", tooltip="The eye section, ready to link into OOP Person or OOP Node.")],
+        )
 
     @classmethod
-    def IS_CHANGED(cls, shape, color, randomize):
+    def execute(cls, shape, color, randomize=False) -> io.NodeOutput:
         if randomize:
-            return random.getrandbits(32)  # Forces re-evaluation every time
+            shape = random_value(cls.EYE_SHAPES)
+            color = random_value(cls.EYE_COLORS)
+        return io.NodeOutput(format_pairs([("shape", shape), ("color", color)]))
 
-NODE_CLASS_MAPPINGS = {
-    "OOPEyesNode": OOPEyesNode
-}
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "OOPEyesNode": "OOP Eyes 👀"
-}
+    @classmethod
+    def fingerprint_inputs(cls, **kwargs):
+        if kwargs.get("randomize"):
+            return random.getrandbits(32)  # Forces re-evaluation every time

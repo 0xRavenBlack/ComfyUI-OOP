@@ -1,29 +1,41 @@
 # __init__.py
-# This file can be empty or include package-level initialization code.
-import importlib
+# V3 registration: the ComfyUI loader prefers comfy_entrypoint over NODE_CLASS_MAPPINGS,
+# so the mappings are intentionally not defined here.
+from comfy_api.latest import io, ComfyExtension
+from typing_extensions import override
 
-node_list = [  # Add list of .py files containing nodes here
-    "oop_node",
-    "oop_person_node",
-    "oop_hair_node",
-    "oop_clothing_node",
-    "oop_mouth_node",
-    "oop_eyes_node",
-    "oop_pose_node",
-    "oop_style_node",
-    "oop_view_node",
-    "oop_location_node",
-    "oop_animal_node",
-    "oop_environment_node",
-]
+from .oop_node import OOPNode
+from .oop_person_node import OOPPersonNode
+from .oop_hair_node import OOPHairNode
+from .oop_clothing_node import OOPClothingNode
+from .oop_mouth_node import OOPMouthNode
+from .oop_eyes_node import OOPEyesNode
+from .oop_pose_node import OOPPoseNode
+from .oop_style_node import OOPStyleNode
+from .oop_view_node import OOPViewNode
+from .oop_location_node import OOPLocationNode
+from .oop_animal_node import OOPAnimalNode
+from .oop_environment_node import OOPEnvironmentNode
 
-NODE_CLASS_MAPPINGS = {}
-NODE_DISPLAY_NAME_MAPPINGS = {}
 
-for module_name in node_list:
-    imported_module = importlib.import_module(".{}".format(module_name), __name__)
+class OOPExtension(ComfyExtension):
+    @override
+    async def get_node_list(self) -> list[type[io.ComfyNode]]:
+        return [
+            OOPNode,
+            OOPPersonNode,
+            OOPHairNode,
+            OOPClothingNode,
+            OOPMouthNode,
+            OOPEyesNode,
+            OOPPoseNode,
+            OOPStyleNode,
+            OOPViewNode,
+            OOPLocationNode,
+            OOPAnimalNode,
+            OOPEnvironmentNode,
+        ]
 
-    NODE_CLASS_MAPPINGS = {**NODE_CLASS_MAPPINGS, **imported_module.NODE_CLASS_MAPPINGS}
-    NODE_DISPLAY_NAME_MAPPINGS = {**NODE_DISPLAY_NAME_MAPPINGS, **imported_module.NODE_DISPLAY_NAME_MAPPINGS}
 
-__all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
+async def comfy_entrypoint() -> OOPExtension:
+    return OOPExtension()

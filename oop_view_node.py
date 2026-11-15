@@ -1,8 +1,9 @@
 import hashlib
-from .oop_shared import NO_VALUE, format_pairs
+from comfy_api.latest import io
+from .oop_shared import NO_VALUE, format_pairs, OOP_VIEW
 
 
-class OOPViewNode:
+class OOPViewNode(io.ComfyNode):
     ANGLE_DESCRIPTIONS = [
         NO_VALUE, "Normal", "High", "Low", "Upward", "Downward", "Side", "Tilted",
         "Diagonal", "EyeLevel", "Bird's Eye", "Worm's Eye", "Dutch Angle", "Overhead"
@@ -14,37 +15,28 @@ class OOPViewNode:
     ]
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "angle": (cls.ANGLE_DESCRIPTIONS, {"default": "Normal"}),
+    def define_schema(cls):
+        return io.Schema(
+            node_id="OOPViewNode",
+            display_name="OOP View 📐",
+            category="Object-Oriented Prompting",
+            description="Camera section of an object-oriented prompt: shot type, angle and background blur. A blank option leaves that pair out of the prompt.",
+            inputs=[
+                io.Combo.Input("angle", options=cls.ANGLE_DESCRIPTIONS, default="Normal"),
                 # camelCase kept: input names are the saved-graph contract
-                "viewType": (cls.VIEW_TYPES, {"default": "Portrait"}),
-                "backgroundBlur": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    RETURN_TYPES = ("OOP_VIEW",)
-    FUNCTION = "generate_view"
-    CATEGORY = "Object-Oriented Prompting"
-    DESCRIPTION = "Camera section of an object-oriented prompt: shot type, angle and background blur. A blank option leaves that pair out of the prompt."
-    OUTPUT_TOOLTIPS = ("The view section, ready to link into OOP Node.",)
-
-    def generate_view(self, angle, viewType, backgroundBlur):
-        return (format_pairs([("shot", viewType), ("angle", angle), ("background", "Blur" if backgroundBlur else "NoBlur")]),)
+                io.Combo.Input("viewType", options=cls.VIEW_TYPES, default="Portrait"),
+                io.Boolean.Input("backgroundBlur", default=False),
+            ],
+            outputs=[OOP_VIEW.Output("view", tooltip="The view section, ready to link into OOP Node.")],
+        )
 
     @classmethod
-    def IS_CHANGED(cls, angle, viewType, backgroundBlur):
+    def execute(cls, angle, viewType, backgroundBlur) -> io.NodeOutput:
+        return io.NodeOutput(format_pairs([("shot", viewType), ("angle", angle), ("background", "Blur" if backgroundBlur else "NoBlur")]))
+
+    @classmethod
+    def fingerprint_inputs(cls, angle, viewType, backgroundBlur):
         # Built-in hash() is salted per process (PYTHONHASHSEED): the cache would miss on every
         # server start and different views could collide, so fingerprint the inputs stably.
         fingerprint = f"{angle}|{viewType}|{backgroundBlur}".encode()
         return hashlib.sha256(fingerprint).hexdigest()
-
-
-NODE_CLASS_MAPPINGS = {
-    "OOPViewNode": OOPViewNode
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "OOPViewNode": "OOP View 📐"
-}

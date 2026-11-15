@@ -1,8 +1,9 @@
 import random
-from .oop_shared import NO_VALUE, format_pairs, random_value
+from comfy_api.latest import io
+from .oop_shared import NO_VALUE, format_pairs, random_value, OOP_MOUTH
 
 
-class OOPMouthNode:
+class OOPMouthNode(io.ComfyNode):
     MOUTH_SHAPES = [
         NO_VALUE, "Round", "Wide", "Thin", "Full", "Heart", "Smile", "Frown", "Neutral",
         "Angled", "Downturned", "Oval", "Pointed", "Pout", "Curved", "Smirk",
@@ -19,40 +20,30 @@ class OOPMouthNode:
     ]
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "shape": (cls.MOUTH_SHAPES, {"default": "Neutral"}),
-            },
-            "optional": {
-                "size": (cls.MOUTH_SIZES, {"default": NO_VALUE}),
-                "opening": (cls.MOUTH_OPENINGS, {"default": NO_VALUE}),
-                "randomize": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    RETURN_TYPES = ("OOP_MOUTH",)
-    FUNCTION = "generate_mouth"
-    CATEGORY = "Object-Oriented Prompting"
-    DESCRIPTION = "Mouth section of an object-oriented prompt: shape, size and how open it is. A blank option leaves that pair out of the prompt."
-    OUTPUT_TOOLTIPS = ("The mouth section, ready to link into OOP Node.",)
-
-    def generate_mouth(self, shape, size=NO_VALUE, opening=NO_VALUE, randomize=False):
-        if randomize:
-            shape = random_value(self.MOUTH_SHAPES)
-            size = random_value(self.MOUTH_SIZES)
-            opening = random_value(self.MOUTH_OPENINGS)
-        return (format_pairs([("shape", shape), ("size", size), ("opening", opening)]),)
+    def define_schema(cls):
+        return io.Schema(
+            node_id="OOPMouthNode",
+            display_name="OOP Mouth 👄",
+            category="Object-Oriented Prompting",
+            description="Mouth section of an object-oriented prompt: shape, size and how open it is. A blank option leaves that pair out of the prompt.",
+            inputs=[
+                io.Combo.Input("shape", options=cls.MOUTH_SHAPES, default="Neutral"),
+                io.Combo.Input("size", options=cls.MOUTH_SIZES, default=NO_VALUE),
+                io.Combo.Input("opening", options=cls.MOUTH_OPENINGS, default=NO_VALUE),
+                io.Boolean.Input("randomize", default=False),
+            ],
+            outputs=[OOP_MOUTH.Output("mouth", tooltip="The mouth section, ready to link into OOP Node.")],
+        )
 
     @classmethod
-    def IS_CHANGED(cls, shape, size, opening, randomize):
+    def execute(cls, shape, size=NO_VALUE, opening=NO_VALUE, randomize=False) -> io.NodeOutput:
         if randomize:
+            shape = random_value(cls.MOUTH_SHAPES)
+            size = random_value(cls.MOUTH_SIZES)
+            opening = random_value(cls.MOUTH_OPENINGS)
+        return io.NodeOutput(format_pairs([("shape", shape), ("size", size), ("opening", opening)]))
+
+    @classmethod
+    def fingerprint_inputs(cls, **kwargs):
+        if kwargs.get("randomize"):
             return random.getrandbits(32)  # Forces re-evaluation every time
-
-NODE_CLASS_MAPPINGS = {
-    "OOPMouthNode": OOPMouthNode
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "OOPMouthNode": "OOP Mouth 👄"
-}

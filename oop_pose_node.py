@@ -1,8 +1,9 @@
 import random
-from .oop_shared import NO_VALUE, format_pairs, random_value
+from comfy_api.latest import io
+from .oop_shared import NO_VALUE, format_pairs, random_value, OOP_POSE
 
 
-class OOPPoseNode:
+class OOPPoseNode(io.ComfyNode):
     BASE_POSES = [
         NO_VALUE, "Sitting", "Stand", "Squat", "Groove", "Lie", "Jump", "Run", "Walk", "Fly",
         "HeadTilt", "LookingBack", "LookingDown", "LookingUp", "Smelling", "Sleeping",
@@ -26,40 +27,30 @@ class OOPPoseNode:
     ]
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "base_pose": (cls.BASE_POSES, {"default": "Stand"}),
-                "hand_pose": (cls.HAND_POSES, {"default": "Stretch"}),
-                "leg_pose": (cls.LEG_POSES, {"default": "AgainstWall"}),
-            },
-            "optional": {
-                "randomize": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    RETURN_TYPES = ("OOP_POSE",)
-    FUNCTION = "generate_pose"
-    CATEGORY = "Object-Oriented Prompting"
-    DESCRIPTION = "Pose section of an object-oriented prompt: body, hand and leg pose. A blank option leaves that pair out of the prompt."
-    OUTPUT_TOOLTIPS = ("The pose section, ready to link into OOP Node.",)
-
-    def generate_pose(self, base_pose, hand_pose, leg_pose, randomize=False):
-        if randomize:
-            base_pose = random_value(self.BASE_POSES)
-            hand_pose = random_value(self.HAND_POSES)
-            leg_pose = random_value(self.LEG_POSES)
-        return (format_pairs([("body", base_pose), ("hands", hand_pose), ("legs", leg_pose)]),)
+    def define_schema(cls):
+        return io.Schema(
+            node_id="OOPPoseNode",
+            display_name="OOP Pose 🧍",
+            category="Object-Oriented Prompting",
+            description="Pose section of an object-oriented prompt: body, hand and leg pose. A blank option leaves that pair out of the prompt.",
+            inputs=[
+                io.Combo.Input("base_pose", options=cls.BASE_POSES, default="Stand"),
+                io.Combo.Input("hand_pose", options=cls.HAND_POSES, default="Stretch"),
+                io.Combo.Input("leg_pose", options=cls.LEG_POSES, default="AgainstWall"),
+                io.Boolean.Input("randomize", default=False),
+            ],
+            outputs=[OOP_POSE.Output("pose", tooltip="The pose section, ready to link into OOP Node.")],
+        )
 
     @classmethod
-    def IS_CHANGED(cls, base_pose, hand_pose, leg_pose, randomize):
+    def execute(cls, base_pose, hand_pose, leg_pose, randomize=False) -> io.NodeOutput:
         if randomize:
+            base_pose = random_value(cls.BASE_POSES)
+            hand_pose = random_value(cls.HAND_POSES)
+            leg_pose = random_value(cls.LEG_POSES)
+        return io.NodeOutput(format_pairs([("body", base_pose), ("hands", hand_pose), ("legs", leg_pose)]))
+
+    @classmethod
+    def fingerprint_inputs(cls, **kwargs):
+        if kwargs.get("randomize"):
             return random.getrandbits(32)  # Forces re-evaluation every time
-
-NODE_CLASS_MAPPINGS = {
-    "OOPPoseNode": OOPPoseNode
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "OOPPoseNode": "OOP Pose 🧍"
-}
