@@ -460,7 +460,7 @@
       },
       "widgets_values": [
         "",
-        "Style: base_style:PhotoRAW\nPerspective: shot:Portrait, angle:Normal, background:Blur\nPerson: \n*  BodyShape: Curvy\n*  Gender: Female\n*  Age: 20-29 Years\n*  Ethnicity: Asian\n*  Hair: color:PinkMagenta, style:Bald\n*  Eyes: shape:Hooded, color:Brown\n*  Mouth: shape:Neutral, size:Medium, opened:Partially Open\n*  Clothes: Top::Garment:Raincoat, color:Yellow, Bottom::Garment:Dungarees, color:Beige\n*  Poses: body:BreastsRestOnTable, hands:HandToMouth, legs:LeaningForward\nAnimal: type:Horse, color: Turquoise, action:Running\nLocation: location:Submarine, object:AdultToy\nEnvironment: time:Night, mood:FullMoon"
+        "Style: base_style:PhotoRAW\nPerspective: shot:Portrait, angle:Normal, background:Blur\nPerson: \n*  BodyShape: Curvy\n*  Gender: Female\n*  Age: 20-29 Years\n*  Ethnicity: Asian\n*  Hair: color:Black, style:Short\n*  Eyes: shape:Round, color:Brown\n*  Mouth: shape:Neutral\n*  Clothes: top_garment:Sweater, bottom_garment:Jeans\n*  Poses: body:Stand, hands:Stretch, legs:AgainstWall\nAnimal: type:Cat, color:Black, action:Lying\nLocation: location:City, object:Statue\nEnvironment: time:Night, mood:FullMoon"
       ]
     },
     {
