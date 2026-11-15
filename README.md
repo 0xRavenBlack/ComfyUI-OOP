@@ -40,7 +40,7 @@ Generates an animal's type, color and action, with randomization support.
 Sets the time of day and the scene mood, with randomization support.
 
 ### OOP Node 💫
-Assembles every connected section into one structured prompt and encodes it into `CONDITIONING` (plus the raw `STRING`) using the checkpoint's CLIP. Every section is optional, so disconnecting one drops its line. This node builds SDXL conditioning (`clip_l` + `clip_g`) and errors on single text-encoder checkpoints; its `clip_skip` widget selects the CLIP layer, defaulting to `-2`, which is already SDXL's own layer.
+Assembles every connected section into one structured prompt and encodes it into `CONDITIONING` (plus the raw `STRING`) using whatever text encoder the checkpoint provides, so it works for SDXL, SD1.5, Flux, Flux2, Flux3, Krea2, Ernie and any other model whose CLIP/text-encoder output you connect. Every section is optional, so disconnecting one drops its line. The `clip_skip` widget defaults to `0`, keeping the layer the checkpoint loaded (already `-2` on SDXL); only set it negative to re-encode CLIP-style encoders from another layer.
 
 ### Prompt Assembly
 - Each leaf node emits `key:value` pairs joined with `, `; `OOPNode` prefixes each section with its label (`Style:`, `Perspective:`, `Person:`, `Animal:`, `Location:`, `Environment:`) and joins the sections with newlines.
@@ -93,8 +93,6 @@ For example, consider the following prompt using the new OOP syntax:
 ```
 
 The same prompt as rendered in ComfyUI: ![OOP prompt example](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/prompt.png?raw=true)
-
-The example image that was generated from a prompt like this one: [https://civitai.com/images/61040035](https://civitai.com/images/61040035)
 
 #### License
 This project is licensed under the MIT License - see the LICENSE file for details.
