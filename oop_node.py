@@ -6,9 +6,9 @@ class OOPNode:
         return {
             "required": {
                 "Clip": ("CLIP", ),
-                "Style": ("OOP_STYLE", {"forceInput": True, "default": ""}),
             },
             "optional": {
+                "Style": ("OOP_STYLE", {"forceInput": True, "default": ""}),
                 "View": ("OOP_VIEW", {"forceInput": True, "default": ""}),
                 "Person": ("OOP_PERSON", {"forceInput": True, "default": ""}),
                 "Animal": ("OOP_ANIMAL", {"forceInput": True, "default": ""}),
@@ -24,7 +24,7 @@ class OOPNode:
     FUNCTION = "create_prompt"
     CATEGORY = "Object-Oriented Prompting"
 
-    def create_prompt(self, Clip, Style, View="", Person="", Animal="", Location="", Environment="", clip_skip=-2):
+    def create_prompt(self, Clip, Style="", View="", Person="", Animal="", Location="", Environment="", clip_skip=-2):
         prompt_parts = []
         if Style: prompt_parts.append(f"Style: {Style}")
         if View: prompt_parts.append(f"Perspective: {View}")
