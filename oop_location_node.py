@@ -1,8 +1,9 @@
 import random
-from .oop_shared import NO_VALUE, format_pairs, random_value
+from comfy_api.latest import io
+from .oop_shared import NO_VALUE, format_pairs, random_value, OOP_LOCATION
 
 
-class OOPLocationNode:
+class OOPLocationNode(io.ComfyNode):
     PLACES = [
         NO_VALUE, "Forest", "City", "Desert", "Mountain", "Beach", "Cave", "Village",
         "Castle", "Temple", "SpaceStation", "Shop", "Club", "Bar", "Office",
@@ -20,40 +21,30 @@ class OOPLocationNode:
     ]
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "place": (cls.PLACES, {"default": "City"}),
-                "object": (cls.OBJECTS, {"default": "Statue"}),
-            },
-            "optional": {
-                "randomize": ("BOOLEAN", {"default": False}),
-            }
-        }
-
-    RETURN_TYPES = ("OOP_LOCATION",)
-    FUNCTION = "generate_location"
-    CATEGORY = "Object-Oriented Prompting"
-    DESCRIPTION = "Scene section of an object-oriented prompt: the place and the object inside it. A blank option leaves that pair out of the prompt."
-    OUTPUT_TOOLTIPS = ("The location section, ready to link into OOP Node.",)
+    def define_schema(cls):
+        return io.Schema(
+            node_id="OOPLocationNode",
+            display_name="OOP Location 🌍",
+            category="Object-Oriented Prompting",
+            description="Scene section of an object-oriented prompt: the place and the object inside it. A blank option leaves that pair out of the prompt.",
+            inputs=[
+                io.Combo.Input("place", options=cls.PLACES, default="City"),
+                io.Combo.Input("object", options=cls.OBJECTS, default="Statue"),
+                io.Boolean.Input("randomize", default=False),
+            ],
+            outputs=[OOP_LOCATION.Output("location", tooltip="The location section, ready to link into OOP Node.")],
+        )
 
     # "object" is the socket name: ComfyUI calls nodes by keyword, so renaming it
     # would break every saved workflow.
-    def generate_location(self, place, object, randomize=False):
+    @classmethod
+    def execute(cls, place, object, randomize=False) -> io.NodeOutput:
         if randomize:
-            place = random_value(self.PLACES)
-            object = random_value(self.OBJECTS)
-        return (format_pairs([("location", place), ("object", object)]),)
+            place = random_value(cls.PLACES)
+            object = random_value(cls.OBJECTS)
+        return io.NodeOutput(format_pairs([("location", place), ("object", object)]))
 
     @classmethod
-    def IS_CHANGED(cls, place, object, randomize):
-        if randomize:
+    def fingerprint_inputs(cls, **kwargs):
+        if kwargs.get("randomize"):
             return random.getrandbits(32)  # Forces re-evaluation every time
-
-NODE_CLASS_MAPPINGS = {
-    "OOPLocationNode": OOPLocationNode
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "OOPLocationNode": "OOP Location 🌍"
-}

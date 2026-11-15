@@ -1,8 +1,9 @@
 import random
-from .oop_shared import NO_VALUE, format_pairs, random_value
+from comfy_api.latest import io
+from .oop_shared import NO_VALUE, format_pairs, random_value, OOP_CLOTHING
 
 
-class OOPClothingNode:
+class OOPClothingNode(io.ComfyNode):
     UPPER_GARMENT_TYPES = [
         NO_VALUE, "Nude", "TShirt", "Sweater", "Jacket", "Shirt", "Blouse", "Hoodie",
         "Coat", "TankTop", "Vest", "Cardigan", "Poncho", "Kimono", "Polo",
@@ -18,31 +19,29 @@ class OOPClothingNode:
     ]
 
     @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "upper_type": (cls.UPPER_GARMENT_TYPES, {"default": "Sweater"}),
-                "lower_type": (cls.LOWER_GARMENT_TYPES, {"default": "Jeans"}),
-            },
-            "optional": {
-                "upper_color": (cls.COLORS, {"default": NO_VALUE}),
-                "lower_color": (cls.COLORS, {"default": NO_VALUE}),
-                "randomize": ("BOOLEAN", {"default": False}),
-            }
-        }
+    def define_schema(cls):
+        return io.Schema(
+            node_id="OOPClothingNode",
+            display_name="OOP Clothing 🥼",
+            category="Object-Oriented Prompting",
+            description="Clothing section of an object-oriented prompt: the top and bottom garment plus their colours. A blank option leaves that pair out of the prompt, and a Nude garment carries no colour.",
+            inputs=[
+                io.Combo.Input("upper_type", options=cls.UPPER_GARMENT_TYPES, default="Sweater"),
+                io.Combo.Input("lower_type", options=cls.LOWER_GARMENT_TYPES, default="Jeans"),
+                io.Combo.Input("upper_color", options=cls.COLORS, default=NO_VALUE),
+                io.Combo.Input("lower_color", options=cls.COLORS, default=NO_VALUE),
+                io.Boolean.Input("randomize", default=False),
+            ],
+            outputs=[OOP_CLOTHING.Output("clothing", tooltip="The clothing section, ready to link into OOP Person or OOP Node.")],
+        )
 
-    RETURN_TYPES = ("OOP_CLOTHING",)
-    FUNCTION = "generate_clothing"
-    CATEGORY = "Object-Oriented Prompting"
-    DESCRIPTION = "Clothing section of an object-oriented prompt: the top and bottom garment plus their colours. A blank option leaves that pair out of the prompt, and a Nude garment carries no colour."
-    OUTPUT_TOOLTIPS = ("The clothing section, ready to link into OOP Person or OOP Node.",)
-
-    def generate_clothing(self, upper_type, lower_type, upper_color=NO_VALUE, lower_color=NO_VALUE, randomize=False):
+    @classmethod
+    def execute(cls, upper_type, lower_type, upper_color=NO_VALUE, lower_color=NO_VALUE, randomize=False) -> io.NodeOutput:
         if randomize:
-            upper_type = random_value(self.UPPER_GARMENT_TYPES)
-            lower_type = random_value(self.LOWER_GARMENT_TYPES)
-            upper_color = random_value(self.COLORS)
-            lower_color = random_value(self.COLORS)
+            upper_type = random_value(cls.UPPER_GARMENT_TYPES)
+            lower_type = random_value(cls.LOWER_GARMENT_TYPES)
+            upper_color = random_value(cls.COLORS)
+            lower_color = random_value(cls.COLORS)
 
         pairs = []
         for position, garment, color in (("top", upper_type, upper_color), ("bottom", lower_type, lower_color)):
@@ -50,16 +49,9 @@ class OOPClothingNode:
             if garment.strip() and garment != "Nude":
                 pairs.append((f"{position}_color", color))
 
-        return (format_pairs(pairs),)
+        return io.NodeOutput(format_pairs(pairs))
 
     @classmethod
-    def IS_CHANGED(cls, upper_type, lower_type, upper_color, lower_color, randomize):
-        if randomize:
+    def fingerprint_inputs(cls, **kwargs):
+        if kwargs.get("randomize"):
             return random.getrandbits(32)  # Forces re-evaluation every time
-
-NODE_CLASS_MAPPINGS = {
-    "OOPClothingNode": OOPClothingNode
-}
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "OOPClothingNode": "OOP Clothing 🥼"
-}
