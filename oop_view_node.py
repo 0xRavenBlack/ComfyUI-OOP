@@ -1,3 +1,6 @@
+import hashlib
+
+
 class OOPViewNode:
     ANGLE_DESCRIPTIONS = [
         "Normal", "High", "Low", "Upward", "Downward", "Side", "Tilted",
@@ -37,8 +40,10 @@ class OOPViewNode:
 
     @classmethod
     def IS_CHANGED(cls, angle, viewType, backgroundBlur):
-        # Simple hash function to signal a change when any parameter changes
-        return hash((angle, viewType, backgroundBlur))
+        # Built-in hash() is salted per process (PYTHONHASHSEED): the cache would miss on every
+        # server start and different views could collide, so fingerprint the inputs stably.
+        fingerprint = f"{angle}|{viewType}|{backgroundBlur}".encode()
+        return hashlib.sha256(fingerprint).hexdigest()
 
 
 # Mapping the node class to a name key
