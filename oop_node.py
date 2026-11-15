@@ -1,5 +1,3 @@
-import gc
-
 class OOPNode:
     @classmethod
     def INPUT_TYPES(cls):
@@ -23,37 +21,29 @@ class OOPNode:
     RETURN_TYPES = ("CONDITIONING", "STRING",)
     FUNCTION = "create_prompt"
     CATEGORY = "Object-Oriented Prompting"
+    DESCRIPTION = "Assembles the connected OOP sections into one object-oriented prompt and encodes it with the checkpoint's CLIP into SDXL conditioning (clip_l + clip_g). Disconnecting a section drops its line."
+    OUTPUT_TOOLTIPS = ("The positive conditioning for the KSampler.",
+                       "The assembled prompt, for a text output node.")
 
     def create_prompt(self, Clip, Style="", View="", Person="", Animal="", Location="", Environment="", clip_skip=-2):
         prompt_parts = []
-        if Style: prompt_parts.append(f"Style: {Style}")
-        if View: prompt_parts.append(f"Perspective: {View}")
-        if Person: prompt_parts.append(f"Person: {Person}")
-        if Animal: prompt_parts.append(f"Animal: {Animal}")
-        if Location: prompt_parts.append(f"Location: {Location}")
-        if Environment: prompt_parts.append(f"Environment: {Environment}")
+        for label, section in (("Style", Style), ("Perspective", View), ("Person", Person),
+                               ("Animal", Animal), ("Location", Location), ("Environment", Environment)):
+            if section.strip():
+                prompt_parts.append(f"{label}: {section}")
         prompt = "\n".join(prompt_parts)
 
-        # Force garbage collection
-        gc.collect()
-
-        # Tokenize and process G/L prompts
         tokens = Clip.tokenize(prompt)
         if "g" not in tokens:
             raise RuntimeError("OOPNode builds SDXL conditioning (clip_g + clip_l); use CLIP Text Encode with single text-encoder checkpoints")
-        tokens["l"] = Clip.tokenize(prompt)["l"]
         if len(tokens["l"]) != len(tokens["g"]):
             empty = Clip.tokenize("")
             while len(tokens["l"]) < len(tokens["g"]):
                 tokens["l"] += empty["l"]
             while len(tokens["l"]) > len(tokens["g"]):
                 tokens["g"] += empty["g"]
-        # Encode tokens exactly as ComfyUI's own SDXL encoder does, so the
-        # conditioning carries only what the sampler reads (pooled output, plus
-        # any clip-schedule/hook data) instead of invented, hard-coded metadata.
-        conditioning = self.encode_with_clip_skip(Clip, tokens, clip_skip)
 
-        return (conditioning, prompt)
+        return (self.encode_with_clip_skip(Clip, tokens, clip_skip), prompt)
 
     def encode_with_clip_skip(self, Clip, tokens, clip_skip):
         if not clip_skip:
@@ -72,6 +62,7 @@ class OOPNode:
 NODE_CLASS_MAPPINGS = {
     "OOPNode": OOPNode
 }
+
 NODE_DISPLAY_NAME_MAPPINGS = {
     "OOPNode": "OOP Node 💫"
 }

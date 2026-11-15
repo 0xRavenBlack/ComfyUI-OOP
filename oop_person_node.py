@@ -1,8 +1,10 @@
 import random
+from .oop_shared import NO_VALUE, PROMPT_BULLET, random_value
+
 
 class OOPPersonNode:
     GENDER = [
-        "Female", "Male", "Androgynous"
+        NO_VALUE, "Female", "Male", "Androgynous"
     ]
     # Single source of truth: (min_age, max_age, label) drives the slider range, the classifier and the randomizer
     AGE_BUCKETS = [
@@ -16,18 +18,11 @@ class OOPPersonNode:
     AGE_MIN = AGE_BUCKETS[0][0]
     AGE_MAX = AGE_BUCKETS[-1][1]
     BODY_SHAPES = [
-            "Slim", "Athletic", "Average", "Curvy", "Chubby", "Hourglass", "Muscular"
+        NO_VALUE, "Slim", "Athletic", "Average", "Curvy", "Chubby", "Hourglass", "Muscular"
     ]
     ETHNICITIES = [
-        "African",
-        "Asian",
-        "Caucasian",
-        "Latino",
-        "Pacific",
-        "Alien"
+        NO_VALUE, "African", "Asian", "Caucasian", "Latino", "Pacific", "Alien"
     ]
-    def __init__(self):
-        self.name = "Person"
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -51,35 +46,33 @@ class OOPPersonNode:
     RETURN_TYPES = ("OOP_PERSON",)
     FUNCTION = "generate_person"
     CATEGORY = "Object-Oriented Prompting"
+    DESCRIPTION = "Person block of an object-oriented prompt: age, body shape, ethnicity, gender, plus linked hair, eyes, mouth, clothing and pose sections. Blank options are left out."
+    OUTPUT_TOOLTIPS = ("The person block, ready to link into OOP Node.",)
 
     def get_age_category(self, age):
         for min_age, max_age, category in self.AGE_BUCKETS:
-            if min_age <= age <= max_age:  # Ensure the age fits within the range
+            if age <= max_age:
                 return category
-        return "unknown"  # For ages that don't fall into any category
+        return self.AGE_BUCKETS[-1][2]
 
-    def generate_person(self, gender, age, body_shape, hair, eyes, ethnicity, mouth, poses, clothing, randomize):
+    def build_person_details(self, age, body_shape, ethnicity, randomize, gender):
         if randomize:
-            min_age, max_age, _ = random.choice(self.AGE_BUCKETS)  # Draw a bucket, then an age inside it
+            min_age, max_age, _ = random.choice(self.AGE_BUCKETS)
             age = random.randint(min_age, max_age)
-        age_category = self.get_age_category(age)
-        details = [
-                f"\n*  BodyShape: {body_shape}",
-                f"*  Gender: {gender}",
-                f"*  Age: {age_category}",
-                f"*  Ethnicity: {ethnicity}"
-            ]
-        if hair.strip():
-            details.append(f"*  Hair: {hair}")
-        if eyes.strip():
-            details.append(f"*  Eyes: {eyes}")
-        if mouth.strip():
-            details.append(f"*  Mouth: {mouth}")
-        if clothing.strip():
-            details.append(f"*  Clothes: {clothing}")
-        if poses.strip():
-            details.append(f"*  Poses: {poses}")
-        return ("\n".join(details),)
+        return [
+            ("BodyShape", body_shape),
+            ("Gender", gender),
+            ("Age", self.get_age_category(age)),
+            ("Ethnicity", ethnicity),
+        ]
+
+    def generate_person(self, age, body_shape, ethnicity, randomize, gender, hair="", eyes="", mouth="", clothing="", poses=""):
+        details = self.build_person_details(age, body_shape, ethnicity, randomize, gender)
+        details += [("Hair", hair), ("Eyes", eyes), ("Mouth", mouth), ("Clothes", clothing), ("Poses", poses)]
+        return (self.join_person_sections(details),)
+
+    def join_person_sections(self, details):
+        return "".join(f"{PROMPT_BULLET}{label}: {value}" for label, value in details if value.strip())
 
     @classmethod
     def IS_CHANGED(cls, age, body_shape, ethnicity, randomize, gender, hair="", eyes="", mouth="", clothing="", poses=""):

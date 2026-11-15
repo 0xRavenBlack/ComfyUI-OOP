@@ -1,6 +1,9 @@
+from .oop_shared import NO_VALUE, format_pairs
+
+
 class OOPStyleNode:
     STYLES = [
-        " ",  "PhotoRAW", "Abstract", "BlackAndWhite", "Vintage", "Minimalist", "PopArt",
+        NO_VALUE, "PhotoRAW", "Abstract", "BlackAndWhite", "Vintage", "Minimalist", "PopArt",
         "Watercolor", "OilPainting", "Sketch", "Cartoon", "Impressionist", "Surrealist", "Realistic",
         "Futuristic", "Cyberpunk", "Gothic", "Grunge", "FilmNoir", "ArtDeco", "Modernist", "Boho", "PaperCut",
         "Neon", "Retro", "Lomo", "PixelArt", "Glitch", "3DRendering", "HDR", "Fantasy", "StreetPhotography"
@@ -13,23 +16,18 @@ class OOPStyleNode:
                 "base_style": (cls.STYLES, {"default": "PhotoRAW"}),
             },
             "optional": {
-                "second_style": (cls.STYLES, {"default": " "}),
+                "second_style": (cls.STYLES, {"default": NO_VALUE}),
             }
         }
 
     RETURN_TYPES = ("OOP_STYLE",)
     FUNCTION = "generate_style"
     CATEGORY = "Object-Oriented Prompting"
+    DESCRIPTION = "Style section of an object-oriented prompt: a base style and an optional second style. A blank option leaves that pair out of the prompt."
+    OUTPUT_TOOLTIPS = ("The style section, ready to link into OOP Node.",)
 
-    def generate_style(self, base_style, second_style=" "):
-        # key:value like every other node, so the section stays parseable
-        result = f"base_style:{base_style}"
-
-        # Only add second_style if it is not the " " no-value sentinel
-        if second_style != " ":
-            result += f", second_style:{second_style}"
-
-        return (result,)
+    def generate_style(self, base_style, second_style=NO_VALUE):
+        return (format_pairs([("base_style", base_style), ("second_style", second_style)]),)
 
 NODE_CLASS_MAPPINGS = {
     "OOPStyleNode": OOPStyleNode

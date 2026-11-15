@@ -1,24 +1,23 @@
 import random
+from .oop_shared import NO_VALUE, format_pairs, random_value
+
 
 class OOPLocationNode:
     PLACES = [
-        "Forest", "City", "Desert", "Mountain", "Beach", "Cave", "Village",
+        NO_VALUE, "Forest", "City", "Desert", "Mountain", "Beach", "Cave", "Village",
         "Castle", "Temple", "SpaceStation", "Shop", "Club", "Bar", "Office",
         "BedRoom", "Kitchen", "Park", "Library", "Airport", "Hotel", "Factory",
         "Garden", "Street", "Museum", "Warehouse", "Zoo", "Hospital", "Bridge",
-        "Courtroom", "Restaurant", "AmusementPark", "Submarine", "Lighthouse"
+        "Courtyard", "Restaurant", "AmusementPark", "Submarine", "Lighthouse"
     ]
 
     OBJECTS = [
-        "Statue", "Tree", "Fountain", "Bridge", "Car", "House", "Bench",
-        "Streetlamp", "Signpost", "Tower", "AdultToy", "Toy", "Laptop",
+        NO_VALUE, "Statue", "Tree", "Fountain", "Bridge", "Car", "House", "Bench",
+        "Streetlamp", "Signpost", "Tower", "TeddyBear", "Toy", "Laptop",
         "CookingUtensils", "Doll", "Chair", "Book", "Computer", "Cup",
         "Lamp", "Piano", "Clock", "Guitar", "Sofa", "Desk", "Fridge",
         "Television", "Microwave", "WashingMachine", "Toothbrush", "Rug"
     ]
-
-    def __init__(self):
-        self.name = "Location"
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -35,13 +34,16 @@ class OOPLocationNode:
     RETURN_TYPES = ("OOP_LOCATION",)
     FUNCTION = "generate_location"
     CATEGORY = "Object-Oriented Prompting"
+    DESCRIPTION = "Scene section of an object-oriented prompt: the place and the object inside it. A blank option leaves that pair out of the prompt."
+    OUTPUT_TOOLTIPS = ("The location section, ready to link into OOP Node.",)
 
+    # "object" is the socket name: ComfyUI calls nodes by keyword, so renaming it
+    # would break every saved workflow.
     def generate_location(self, place, object, randomize=False):
         if randomize:
-            place = random.choice(self.PLACES)
-            object = random.choice(self.OBJECTS)
-
-        return (f"location:{place}, object:{object}",)
+            place = random_value(self.PLACES)
+            object = random_value(self.OBJECTS)
+        return (format_pairs([("location", place), ("object", object)]),)
 
     @classmethod
     def IS_CHANGED(cls, place, object, randomize):

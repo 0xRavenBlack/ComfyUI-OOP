@@ -1,16 +1,15 @@
 import random
+from .oop_shared import NO_VALUE, format_pairs, random_value
+
 
 class OOPEnvironmentNode:
     DAY_TIMES = [
-        "Morning", "Noon", "Afternoon", "Evening", "Night"
+        NO_VALUE, "Morning", "Noon", "Afternoon", "Evening", "Night"
     ]
 
     MOODS = [
-        "ClearNightSky", "SunDown", "CloudySky", "Sunny", "Rainy", "Stormy", "FullMoon", "HalfMoon"
+        NO_VALUE, "ClearNightSky", "SunDown", "CloudySky", "Sunny", "Rainy", "Stormy", "FullMoon", "HalfMoon"
     ]
-
-    def __init__(self):
-        self.name = "Environment"
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -27,13 +26,14 @@ class OOPEnvironmentNode:
     RETURN_TYPES = ("OOP_ENVIRONMENT",)
     FUNCTION = "generate_environment"
     CATEGORY = "Object-Oriented Prompting"
+    DESCRIPTION = "Environment section of an object-oriented prompt: time of day and the mood of the scene. A blank option leaves that pair out of the prompt."
+    OUTPUT_TOOLTIPS = ("The environment section, ready to link into OOP Node.",)
 
     def generate_environment(self, day_time, mood, randomize=False):
         if randomize:
-            day_time = random.choice(self.DAY_TIMES)
-            mood = random.choice(self.MOODS)
-
-        return (f"time:{day_time}, mood:{mood}",)
+            day_time = random_value(self.DAY_TIMES)
+            mood = random_value(self.MOODS)
+        return (format_pairs([("time", day_time), ("mood", mood)]),)
 
     @classmethod
     def IS_CHANGED(cls, day_time, mood, randomize):
