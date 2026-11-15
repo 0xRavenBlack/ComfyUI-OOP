@@ -22,12 +22,12 @@ class OOPStyleNode:
     CATEGORY = "Object-Oriented Prompting"
 
     def generate_style(self, base_style, second_style=" "):
-        # Start with the base style
-        result = f"{base_style}"
+        # key:value like every other node, so the section stays parseable
+        result = f"base_style:{base_style}"
 
-        # Only add second_style if it is not " "
+        # Only add second_style if it is not the " " no-value sentinel
         if second_style != " ":
-            result += f", {second_style}"
+            result += f", second_style:{second_style}"
 
         return (result,)
 
