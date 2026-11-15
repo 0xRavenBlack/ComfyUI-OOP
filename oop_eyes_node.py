@@ -1,16 +1,15 @@
 import random
+from .oop_shared import NO_VALUE, format_pairs, random_value
+
 
 class OOPEyesNode:
     EYE_SHAPES = [
-        "Round", "Almond", "Hooded", "Monolid", "Upturned", "Downturned", "Oval", "Closed"
+        NO_VALUE, "Round", "Almond", "Hooded", "Monolid", "Upturned", "Downturned", "Oval", "Closed"
     ]
     EYE_COLORS = [
-        "Blue", "Green", "Brown", "Hazel", "Gray", "Amber", "Violet"
+        NO_VALUE, "Blue", "Green", "Brown", "Hazel", "Gray", "Amber", "Violet"
     ]
 
-    def __init__(self):
-        self.name = "Eyes"
-        self.randomize = False
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -26,15 +25,17 @@ class OOPEyesNode:
     RETURN_TYPES = ("OOP_EYES",)
     FUNCTION = "generate_eyes"
     CATEGORY = "Object-Oriented Prompting"
+    DESCRIPTION = "Eye section of an object-oriented prompt: shape and colour. A blank option leaves that pair out of the prompt."
+    OUTPUT_TOOLTIPS = ("The eye section, ready to link into OOP Person or OOP Node.",)
 
     def generate_eyes(self, shape, color, randomize=False):
         if randomize:
-            shape = random.choice(self.EYE_SHAPES)
-            color = random.choice(self.EYE_COLORS)
-        return (f"shape:{shape}, color:{color}",)
+            shape = random_value(self.EYE_SHAPES)
+            color = random_value(self.EYE_COLORS)
+        return (format_pairs([("shape", shape), ("color", color)]),)
 
     @classmethod
-    def IS_CHANGED(cls, shape, color, randomize=False):
+    def IS_CHANGED(cls, shape, color, randomize):
         if randomize:
             return random.getrandbits(32)  # Forces re-evaluation every time
 

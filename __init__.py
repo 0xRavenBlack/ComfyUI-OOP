@@ -1,9 +1,8 @@
 # __init__.py
 # This file can be empty or include package-level initialization code.
 import importlib
-import os
 
-node_list = [ #Add list of .py files containing nodes here
+node_list = [  # Add list of .py files containing nodes here
     "oop_node",
     "oop_person_node",
     "oop_hair_node",

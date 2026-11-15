@@ -1,6 +1,6 @@
 {
-  "last_node_id": 25,
-  "last_link_id": 27,
+  "last_node_id": 26,
+  "last_link_id": 28,
   "nodes": [
     {
       "id": 12,
@@ -372,6 +372,7 @@
         {
           "name": "Style",
           "type": "OOP_STYLE",
+          "shape": 7,
           "link": 13
         },
         {
@@ -402,7 +403,7 @@
           "name": "Environment",
           "type": "OOP_ENVIRONMENT",
           "shape": 7,
-          "link": null
+          "link": 28
         }
       ],
       "outputs": [
@@ -424,7 +425,7 @@
         "ver": "64027f9c2b2aee4e337b440f051302f707f50769",
         "Node name for S&R": "OOPNode"
       },
-      "widgets_values": []
+      "widgets_values": [-2]
     },
     {
       "id": 23,
@@ -459,7 +460,7 @@
       },
       "widgets_values": [
         "",
-        "Style: PhotoRAW\nPerspective: shot:Portrait, angle:Normal, background:Blur\nPerson: \n*  BodyShape: Curvy\n*  Gender: Female\n*  Age: 20-29Years\n*  Ethnicity: Asian\n*  Hair: color:YellowLime, style:Braided\n*  Eyes: shape:Hooded, color:Hazel\n*  Mouth: shape:Frown, size:Medium, opened:Wide\n*  Clothes: Top::Garment:Sweater, color:Gray, Bottom::Garment:Chinos, color:Black\n*  Poses: body:Run, hands:HandOnHips, legs:KneesUp\nAnimal: type:Horse, color: Spotted, action:Climbing\nLocation: location:BedRoom, object:CookingUtensils"
+        "Style: base_style:PhotoRAW\nPerspective: shot:Portrait, angle:Normal, background:Blur\nPerson: \n*  BodyShape: Curvy\n*  Gender: Female\n*  Age: 20-29 Years\n*  Ethnicity: Asian\n*  Hair: color:Black, style:Short\n*  Eyes: shape:Round, color:Brown\n*  Mouth: shape:Neutral\n*  Clothes: top_garment:Sweater, bottom_garment:Jeans\n*  Poses: body:Stand, hands:Stretch, legs:AgainstWall\nAnimal: type:Cat, color:Black, action:Lying\nLocation: location:City, object:Statue\nEnvironment: time:Night, mood:FullMoon"
       ]
     },
     {
@@ -611,6 +612,29 @@
         "karras",
         1
       ]
+    },
+    {
+      "id": 26,
+      "type": "OOPEnvironmentNode",
+      "pos": [63.934837341308594, 445.0],
+      "size": [315, 106],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OOP_ENVIRONMENT",
+          "type": "OOP_ENVIRONMENT",
+          "links": [28]
+        }
+      ],
+      "properties": {
+        "aux_id": "0xRavenBlack/ComfyUI-OOP",
+        "ver": "64027f9c2b2aee4e337b440f051302f707f50769",
+        "Node name for S&R": "OOPEnvironmentNode"
+      },
+      "widgets_values": ["Night", "FullMoon", false]
     }
   ],
   "links": [
@@ -634,7 +658,8 @@
     [24, 11, 1, 23, 0, "STRING"],
     [25, 24, 0, 3, 2, "CONDITIONING"],
     [26, 25, 0, 24, 0, "CONDITIONING"],
-    [27, 4, 1, 25, 0, "CLIP"]
+    [27, 4, 1, 25, 0, "CLIP"],
+    [28, 26, 0, 11, 6, "OOP_ENVIRONMENT"]
   ],
   "groups": [],
   "config": {},

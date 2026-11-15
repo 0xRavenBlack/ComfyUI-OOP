@@ -1,26 +1,25 @@
 import random
+from .oop_shared import NO_VALUE, format_pairs, random_value
+
 
 class OOPAnimalNode:
     ANIMAL_TYPES = [
-        "Horse", "Cat", "Dog", "Elephant", "Lion", "Tiger", "Bear", "Monkey",
+        NO_VALUE, "Horse", "Cat", "Dog", "Elephant", "Lion", "Tiger", "Bear", "Monkey",
         "Snake", "Giraffe", "Kangaroo", "Wolf", "Rabbit", "Zebra", "Cheetah",
-        "Penguin", "Koala", "Panda", "Alligator", "Leopard", "Horse", "Frog"
+        "Penguin", "Koala", "Panda", "Alligator", "Leopard", "Frog"
     ]
 
     COLORS = [
-        "Black", "White", "Brown", "Golden", "Gray", "Spotted", "Striped", "Red",
+        NO_VALUE, "Black", "White", "Brown", "Golden", "Gray", "Spotted", "Striped", "Red",
         "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "Beige", "Silver",
-        "Turquoise", "Turquoise", "Lavender", "Teal"
+        "Turquoise", "Lavender", "Teal"
     ]
 
     ACTIONS = [
-        "Jumping", "Lying", "Running", "Sleeping", "Playing", "Eating", "Roaring",
-        "Climbing", "Teasing", "Swimming", "Hiding", "Flying", "Chasing", "Barking",
+        NO_VALUE, "Jumping", "Lying", "Running", "Sleeping", "Playing", "Eating", "Roaring",
+        "Climbing", "Taunting", "Swimming", "Hiding", "Flying", "Chasing", "Barking",
         "Meowing", "Purring", "Galloping", "Howling", "Scratching", "Biting", "Sniffing"
     ]
-
-    def __init__(self):
-        self.name = "Animal"
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -38,13 +37,15 @@ class OOPAnimalNode:
     RETURN_TYPES = ("OOP_ANIMAL",)
     FUNCTION = "generate_animal"
     CATEGORY = "Object-Oriented Prompting"
+    DESCRIPTION = "Animal section of an object-oriented prompt: type, colour and action as key:value pairs. A blank option leaves that pair out of the prompt."
+    OUTPUT_TOOLTIPS = ("The animal section, ready to link into OOP Node.",)
 
     def generate_animal(self, animal_type, color, action, randomize=False):
         if randomize:
-            animal_type = random.choice(self.ANIMAL_TYPES)
-            color = random.choice(self.COLORS)
-            action = random.choice(self.ACTIONS)
-        return (f"type:{animal_type}, color: {color}, action:{action}",)
+            animal_type = random_value(self.ANIMAL_TYPES)
+            color = random_value(self.COLORS)
+            action = random_value(self.ACTIONS)
+        return (format_pairs([("type", animal_type), ("color", color), ("action", action)]),)
 
     @classmethod
     def IS_CHANGED(cls, animal_type, color, action, randomize):
