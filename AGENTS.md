@@ -29,12 +29,29 @@ tensor.
 | `oop_node.py` | Terminal/aggregation node: consumes `CLIP` + the 6 top-level OOP types → `CONDITIONING`, `STRING` | Yes |
 | `oop_person_node.py` | Aggregator: consumes the 5 body-part OOP types → `OOP_PERSON` | Yes |
 | `oop_{hair,eyes,mouth,clothing,pose,style,view,location,animal,environment}_node.py` | Leaf "attribute" nodes | Yes |
-| `pyproject.toml` | Comfy Registry metadata (project `name = "oop"`, `version = "1.0.0"`) | Yes — bump `version` when publishing a release |
+| `oop_shared.py` | **Not a node.** The single shared module owning the prompt contract: `NO_VALUE` sentinel, `PROMPT_BULLET`, `random_value(pool)`, `format_pairs(pairs)`. Every node module reaches it with `from .oop_shared import …` | Yes — deliberately **not** in `node_list` |
+| `pyproject.toml` | Comfy Registry metadata (project `name = "oop"`, `version = "1.1.0"`) | Yes — bump `version` when publishing a release |
 | `README.md` | User-facing docs + the canonical example prompt | Yes |
 | `workflow/ComfyUIOOP.json` | Saved ComfyUI graph (19-node demo workflow) | Only when intentionally re-exporting |
 | `screenshot/{workflow,prompt}.png` | README assets | No |
 | `.github/workflows/publish.yml` | Registry publish action | No |
 | `.gitignore` | Generic Python/Django template ignore list | No |
+
+**Package-root rule — 13 `.py` files, exactly.** The root holds the 12 `node_list` node modules
+plus the one shared module `oop_shared.py`. ComfyUI loads the package by compiling its
+`__init__.py` (`nodes.py:load_custom_node`, `spec_from_file_location(name, "<folder>/__init__.py")`),
+so the only code that runs at startup is `__init__.py` plus whatever `node_list` pulls in; a new root
+module is invisible until `node_list` lists it, and once listed it is registered by class-name key
+with no per-module isolation. Therefore:
+- a fourth tier, a spike/scratch file, or a `*_old.py` backup at the root is unregistered dead weight
+  that still ships in the package download and still gets picked up by `python3 -m py_compile *.py`
+  and the §8 root check — it can be neither trusted nor safely removed by reading `node_list` alone
+  (that is also how loose `.py` files at the `custom_nodes/` level get imported straight into the
+  node table by the same loader).
+- shared code goes **into `oop_shared.py`**, not into a second helper module.
+- throwaway experiments go outside the package, in `/tmp`.
+- `__pycache__/` and `.disabled` are the only non-module entries allowed to sit in the folder
+  (`__pycache__` is stripped by the loader; `.disabled` suffixes are skipped).
 
 There are **no** `requirements.txt`, `tests/`, `examples/`, `WEB_DIRECTORY` assets,
 lint/format/typing config (`pyproject.toml` has no `[tool.ruff]`, `[tool.black]`, `[tool.mypy]`,
@@ -220,6 +237,19 @@ Expected registered keys (12):
 OOPStyleNode, OOPViewNode, OOPLocationNode, OOPAnimalNode, OOPEnvironmentNode`
 
 If a key is missing, the module is missing from `node_list` in `__init__.py`.
+
+```bash
+# Package-root hygiene (§2): root modules must equal node_list + oop_shared + __init__
+python3 - <<'PY'
+import importlib, os, sys
+sys.path.insert(0, os.path.dirname(os.getcwd()))        # simulate ComfyUI/custom_nodes
+package = importlib.import_module(os.path.basename(os.getcwd()))
+allowed = set(package.node_list) | {"oop_shared", "__init__"}
+root = {os.path.splitext(f)[0] for f in os.listdir(".") if f.endswith(".py")}
+print(sorted(root - allowed))     # must be []
+print(sorted(allowed - root - {"__init__"}))  # must be []
+PY
+```
 
 ### Install / run (needs ComfyUI; not available in this sandbox)
 
