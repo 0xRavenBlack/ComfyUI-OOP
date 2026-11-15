@@ -94,8 +94,6 @@ For example, consider the following prompt using the new OOP syntax:
 
 The same prompt as rendered in ComfyUI: ![OOP prompt example](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/prompt.png?raw=true)
 
-The example image that was generated from a prompt like this one: [https://civitai.com/images/61040035](https://civitai.com/images/61040035)
-
 #### License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
