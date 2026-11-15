@@ -21,10 +21,10 @@ Customizes mouth shape, size, and openness with randomization features.
 ### OOP Person Node 👤
 Generates detailed person descriptions based on gender, age, body shape, ethnicity, hair, eyes, mouth, clothing, and poses.
 
-###  OOP Pose Node 🧍
+### OOP Pose Node 🧍
 Customizes poses with configurable body, hand, and leg poses, with randomization support.
 
-###  OOP Style Node 🎨
+### OOP Style Node 🎨
 Combines visual styles like "Abstract", "Vintage", "Cyberpunk", "Watercolor", and more to create diverse art styles.
 
 ### OOP View Node 📐
@@ -45,7 +45,7 @@ Assembles every connected section into one structured prompt and encodes it into
 ### Prompt Assembly
 - Each leaf node emits `key:value` pairs joined with `, `; `OOPNode` prefixes each section with its label (`Style:`, `Perspective:`, `Person:`, `Animal:`, `Location:`, `Environment:`) and joins the sections with newlines.
 - `OOPPersonNode` nests its details as bullet lines (`*  `), so the person block sits under `Person:`.
-- A dropdown entry that is a single space (`" "`) means "no value": the pair is left out of the prompt entirely.
+- The first entry of every dropdown is a single space (`" "`), meaning "no value": that pair, or an entire section, is left out of the prompt.
 - Keeping **randomize** off holds the values steady; turning it on redraws them on every run.
 
 ### Requirements
@@ -75,23 +75,26 @@ The OOP nodes themselves need no extras: only the example workflow does.
 #### Example
 For example, consider the following prompt using the new OOP syntax:
 ```
-    Style: base_style:PhotoRAW, second_style:Cyberpunk
-    Perspective: shot:FullBody, angle:Dutch Angle, background:NoBlur
-    Person:
-    *  BodyShape: Athletic
+    Style: base_style:PhotoRAW
+    Perspective: shot:Portrait, angle:Normal, background:Blur
+    Person: 
+    *  BodyShape: Curvy
     *  Gender: Female
-    *  Age: 30-39 Years
-    *  Ethnicity: Latino
-    *  Hair: color:OliveBeige, style:Ponytail
-    *  Eyes: shape:Round, color:Hazel
-    *  Mouth: shape:Full, size:Medium, opened:Slightly
-    *  Clothes: Top::Garment:Sweater, color:Red, Bottom::Garment:Sweatpants, color:Gray
-    *  Poses: body:Stand, hands:HandToMouth, legs:LegLift
-    Animal: type:Wolf, color: Purple, action:Playing
-    Location: location:Beach, object:Toy
+    *  Age: 20-29 Years
+    *  Ethnicity: Asian
+    *  Hair: color:Black, style:Short
+    *  Eyes: shape:Round, color:Brown
+    *  Mouth: shape:Neutral
+    *  Clothes: top_garment:Sweater, bottom_garment:Jeans
+    *  Poses: body:Stand, hands:Stretch, legs:AgainstWall
+    Animal: type:Cat, color:Black, action:Lying
+    Location: location:City, object:Statue
     Environment: time:Night, mood:FullMoon
 ```
-![](https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/224701fb-4c3f-47d2-a90b-6d3ac8cd58cf/width=525/224701fb-4c3f-47d2-a90b-6d3ac8cd58cf.jpeg)Link to Image: [https://civitai.com/images/61040035](https://civitai.com/images/61040035)
+
+The same prompt as rendered in ComfyUI: ![OOP prompt example](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/prompt.png?raw=true)
+
+The example image that was generated from a prompt like this one: [https://civitai.com/images/61040035](https://civitai.com/images/61040035)
 
 #### License
 This project is licensed under the MIT License - see the LICENSE file for details.
