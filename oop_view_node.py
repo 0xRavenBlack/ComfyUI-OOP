@@ -1,6 +1,7 @@
 import hashlib
+import random
 from comfy_api.latest import io
-from .oop_shared import NO_VALUE, format_pairs, OOP_VIEW
+from .oop_shared import NO_VALUE, format_pairs, random_value, OOP_VIEW
 
 
 class OOPViewNode(io.ComfyNode):
@@ -26,16 +27,26 @@ class OOPViewNode(io.ComfyNode):
                 # camelCase kept: input names are the saved-graph contract
                 io.Combo.Input("viewType", options=cls.VIEW_TYPES, default="Portrait"),
                 io.Boolean.Input("backgroundBlur", default=False),
+                io.Boolean.Input("randomize", default=False),
             ],
             outputs=[OOP_VIEW.Output("view", tooltip="The view section, ready to link into OOP Node.")],
         )
 
     @classmethod
-    def execute(cls, angle, viewType, backgroundBlur) -> io.NodeOutput:
+    def execute(cls, angle, viewType, backgroundBlur, randomize=False) -> io.NodeOutput:
+        if randomize:
+            angle = random_value(cls.ANGLE_DESCRIPTIONS)
+            viewType = random_value(cls.VIEW_TYPES)
+            backgroundBlur = random.choice([False, True])
         return io.NodeOutput(format_pairs([("shot", viewType), ("angle", angle), ("background", "Blur" if backgroundBlur else "NoBlur")]))
 
     @classmethod
-    def fingerprint_inputs(cls, angle, viewType, backgroundBlur):
+    def fingerprint_inputs(cls, **kwargs):
+        if kwargs.get("randomize"):
+            return random.getrandbits(32)
+        angle = kwargs.get("angle")
+        viewType = kwargs.get("viewType")
+        backgroundBlur = kwargs.get("backgroundBlur")
         # Built-in hash() is salted per process (PYTHONHASHSEED): the cache would miss on every
         # server start and different views could collide, so fingerprint the inputs stably.
         fingerprint = f"{angle}|{viewType}|{backgroundBlur}".encode()

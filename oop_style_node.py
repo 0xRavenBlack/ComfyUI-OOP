@@ -1,5 +1,6 @@
+import random
 from comfy_api.latest import io
-from .oop_shared import NO_VALUE, format_pairs, OOP_STYLE
+from .oop_shared import NO_VALUE, format_pairs, random_value, OOP_STYLE
 
 
 class OOPStyleNode(io.ComfyNode):
@@ -20,10 +21,19 @@ class OOPStyleNode(io.ComfyNode):
             inputs=[
                 io.Combo.Input("base_style", options=cls.STYLES, default="PhotoRAW"),
                 io.Combo.Input("second_style", options=cls.STYLES, default=NO_VALUE),
+                io.Boolean.Input("randomize", default=False),
             ],
             outputs=[OOP_STYLE.Output("style", tooltip="The style section, ready to link into OOP Node.")],
         )
 
     @classmethod
-    def execute(cls, base_style, second_style=NO_VALUE) -> io.NodeOutput:
+    def execute(cls, base_style, second_style=NO_VALUE, randomize=False) -> io.NodeOutput:
+        if randomize:
+            base_style = random_value(cls.STYLES)
+            second_style = random_value(cls.STYLES)
         return io.NodeOutput(format_pairs([("base_style", base_style), ("second_style", second_style)]))
+
+    @classmethod
+    def fingerprint_inputs(cls, **kwargs):
+        if kwargs.get("randomize"):
+            return random.getrandbits(32)
