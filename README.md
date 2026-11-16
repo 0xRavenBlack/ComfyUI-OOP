@@ -123,28 +123,7 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/0xRavenBlack/ComfyUI-OOP
 ```
 
-Restart ComfyUI. The nodes will appear under the **`Object-Oriented Prompting`** category.
-
-## Requirements
-
-- **ComfyUI** (recent version recommended for V3 node support and the included Krea 2 sample workflow nodes)
-- **Python 3.x** (as provided by your ComfyUI environment)
-
-## Tips
-
-- Start with only a few sections connected, then add `Lighting` / `Background` / `Expression` to refine composition and mood.
-- Use `randomize` toggles for exploration; turn them off to lock a prompt for reproducible iterations.
-- If you swap model families/checkpoints, keep `clip_skip` at `0` unless you have a specific reason to change it.
-
-## Contributing
-
-Contributions are welcome!
-
-1. Fork the repository
-2. Create a focused branch/change
-3. Keep node IDs/input names and prompt format compatibility in mind
-4. Open a pull request with a clear description of the behavior change
-
-## License
+#### License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 MIT — see [LICENSE](LICENSE).
