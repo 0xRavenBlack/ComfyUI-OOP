@@ -1,6 +1,6 @@
 import random
 from comfy_api.latest import io
-from .oop_shared import NO_VALUE, PROMPT_BULLET, random_value, OOP_HAIR, OOP_EYES, OOP_MOUTH, OOP_CLOTHING, OOP_POSE, OOP_PERSON
+from .oop_shared import NO_VALUE, PROMPT_BULLET, random_value, OOP_HAIR, OOP_EYES, OOP_MOUTH, OOP_CLOTHING, OOP_POSE, OOP_EXPRESSION, OOP_PERSON
 
 
 class OOPPersonNode(io.ComfyNode):
@@ -41,6 +41,7 @@ class OOPPersonNode(io.ComfyNode):
                 OOP_HAIR.Input("hair", optional=True),
                 OOP_EYES.Input("eyes", optional=True),
                 OOP_MOUTH.Input("mouth", optional=True),
+                OOP_EXPRESSION.Input("expression", optional=True),
                 OOP_CLOTHING.Input("clothing", optional=True),
                 OOP_POSE.Input("poses", optional=True),
             ],
@@ -71,9 +72,9 @@ class OOPPersonNode(io.ComfyNode):
         return "".join(f"{PROMPT_BULLET}{label}: {value}" for label, value in details if value and value.strip())
 
     @classmethod
-    def execute(cls, age, body_shape, ethnicity, randomize, gender, hair=None, eyes=None, mouth=None, clothing=None, poses=None) -> io.NodeOutput:
+    def execute(cls, age, body_shape, ethnicity, randomize, gender, hair=None, eyes=None, mouth=None, expression=None, clothing=None, poses=None) -> io.NodeOutput:
         details = cls.build_person_details(age, body_shape, ethnicity, randomize, gender)
-        details += [("Hair", hair), ("Eyes", eyes), ("Mouth", mouth), ("Clothes", clothing), ("Poses", poses)]
+        details += [("Hair", hair), ("Eyes", eyes), ("Mouth", mouth), ("Expression", expression), ("Clothes", clothing), ("Poses", poses)]
         return io.NodeOutput(cls.join_person_sections(details))
 
     @classmethod

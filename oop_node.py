@@ -1,5 +1,5 @@
 from comfy_api.latest import io
-from .oop_shared import OOP_STYLE, OOP_VIEW, OOP_PERSON, OOP_ANIMAL, OOP_LOCATION, OOP_ENVIRONMENT
+from .oop_shared import OOP_STYLE, OOP_VIEW, OOP_PERSON, OOP_ANIMAL, OOP_LOCATION, OOP_ENVIRONMENT, OOP_LIGHTING, OOP_BACKGROUND
 
 
 class OOPNode(io.ComfyNode):
@@ -18,6 +18,8 @@ class OOPNode(io.ComfyNode):
                 OOP_ANIMAL.Input("Animal", optional=True),
                 OOP_LOCATION.Input("Location", optional=True),
                 OOP_ENVIRONMENT.Input("Environment", optional=True),
+                OOP_LIGHTING.Input("Lighting", optional=True),
+                OOP_BACKGROUND.Input("Background", optional=True),
                 # 0 = keep the layer the checkpoint loaded; negative = encode from that layer
                 io.Int.Input("clip_skip", default=0, min=-24, max=0, step=1,
                              tooltip="Advanced. 0 keeps the layer the checkpoint loaded, which is already correct for SD1.5, SDXL, Flux, Flux2/Flux3, Krea2 and Ernie. A negative value re-encodes CLIP-style text encoders from that layer."),
@@ -29,10 +31,11 @@ class OOPNode(io.ComfyNode):
         )
 
     @classmethod
-    def execute(cls, Clip, Style=None, View=None, Person=None, Animal=None, Location=None, Environment=None, clip_skip=0) -> io.NodeOutput:
+    def execute(cls, Clip, Style=None, View=None, Person=None, Animal=None, Location=None, Environment=None, Lighting=None, Background=None, clip_skip=0) -> io.NodeOutput:
         prompt_parts = []
         for label, section in (("Style", Style), ("Perspective", View), ("Person", Person),
-                               ("Animal", Animal), ("Location", Location), ("Environment", Environment)):
+                               ("Animal", Animal), ("Location", Location), ("Environment", Environment),
+                               ("Lighting", Lighting), ("Background", Background)):
             if section and section.strip():
                 prompt_parts.append(f"{label}: {section}")
         prompt = "\n".join(prompt_parts)

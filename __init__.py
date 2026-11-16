@@ -16,6 +16,9 @@ from .oop_view_node import OOPViewNode
 from .oop_location_node import OOPLocationNode
 from .oop_animal_node import OOPAnimalNode
 from .oop_environment_node import OOPEnvironmentNode
+from .oop_expression_node import OOPExpressionNode
+from .oop_lighting_node import OOPLightingNode
+from .oop_background_node import OOPBackgroundNode
 
 
 class OOPExtension(ComfyExtension):
@@ -34,6 +37,9 @@ class OOPExtension(ComfyExtension):
             OOPLocationNode,
             OOPAnimalNode,
             OOPEnvironmentNode,
+            OOPExpressionNode,
+            OOPLightingNode,
+            OOPBackgroundNode,
         ]
 
 

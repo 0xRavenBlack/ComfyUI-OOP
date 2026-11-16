@@ -1,101 +1,150 @@
-# ComfyUI OOP Nodes
-This project contains a set of **ComfyUI OOP Nodes** that allow users to build detailed, object-oriented prompts with customizable visual attributes for characters, environments, and scenes. These nodes are designed to provide an intuitive way to generate and control different elements such as person attributes, hairstyles, eyes, locations, and poses. The **randomize** function allows for dynamic generation, enabling users to randomize different visual elements such as eye color, hairstyle, age, pose, animal, location and environment settings, providing endless possibilities for character creation and scene design.
+# ComfyUI-OOP
 
-## Features
-Available Nodes
+**Object-Oriented Prompting nodes for ComfyUI** — build rich, structured, reproducible prompts from modular attribute nodes, then encode them into conditioning for your workflow.
 
-![Demo Workflow](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/workflow.png?raw=true)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-### OOP Hair Node 🦰
-Allows customization of hair color, style, and optional secondary color.
+ComfyUI-OOP turns prompt building into a composable graph: pick or randomize attributes (person, style, camera, lighting, scene, and more), assemble them into a clean `key:value` prompt, and feed the result into any compatible text encoder/conditioning pipeline.
 
-### OOP Eyes Node 👀
-Customizes eye shape and color with an option to randomize attributes.
+## ✨ Example
 
-### OOP Location Node 🌍
-Generates scenes with customizable locations and objects, with randomization options.
+**Generated with ComfyUI-OOP (Krea 2 Turbo workflow):**
 
-### OOP Mouth Node 👄
-Customizes mouth shape, size, and openness with randomization features.
+![ComfyUI-OOP example output](screenshot/example.png)
 
-### OOP Person Node 👤
-Generates detailed person descriptions based on gender, age, body shape, ethnicity, hair, eyes, mouth, clothing, and poses.
+<details>
+<summary><b>Prompt used for this image</b></summary>
 
-### OOP Pose Node 🧍
-Customizes poses with configurable body, hand, and leg poses, with randomization support.
+```text
+Style: base_style:Surrealist, second_style:Watercolor
+Perspective: shot:Portrait, angle:EyeLevel, background:Blur
+Person: 
+*  BodyShape: Chubby
+*  Gender: Female
+*  Age: 20-29 Years
+*  Ethnicity: Latino
+*  Hair: color:Rose Brown, style:Undercut
+*  Eyes: shape:Round, color:Blue
+*  Mouth: shape:Heart, size:Large, opening:Wide
+*  Expression: emotion:Sad, intensity:Mild, gaze:ClosedEyes
+*  Clothes: top_garment:Kimono, top_color:Red, bottom_garment:Trousers, bottom_color:Brown
+*  Poses: body:HeadTilt, hands:MiddleFinger, legs:IndianStyle
+Animal: type:Monkey, color:Beige, action:Galloping
+Location: location:Library, object:Guitar
+Environment: time:Morning, mood:FullMoon
+Lighting: type:Soft, direction:Top, intensity:Dim
+Background: setting:Outdoor, detail:Bokeh, color_mood:Monochrome
+```
 
-### OOP Style Node 🎨
-Combines visual styles like "Abstract", "Vintage", "Cyberpunk", "Watercolor", and more to create diverse art styles.
+</details>
 
-### OOP View Node 📐
-Configures camera angles, shot types, and background blur effects for image generation.
+## Highlights
 
-### OOP Clothing Node 🥼
-Generates a top and a bottom garment with their types and optional colors, with randomization support.
+- **Modular prompt building:** compose prompts from focused nodes instead of one giant text box
+- **Structured output:** readable, labeled sections (`Style`, `Perspective`, `Person`, `Animal`, `Location`, `Environment`, `Lighting`, `Background`)
+- **Person aggregation:** nest character details (hair, eyes, mouth, expression, clothing, pose, etc.) under a single `Person` block
+- **Randomize controls:** many nodes can redraw values per run for fast exploration
+- **Model-agnostic assembly:** `OOP Node` encodes with the connected CLIP/text encoder and works across common model stacks (SD1.5/SDXL/Flux-family/Krea-style pipelines, depending on your setup)
+- **Optional by design:** blank values (`" "`) and disconnected sections are omitted cleanly from the final prompt
+- **Krea 2 sample workflow:** includes a real Krea 2 Turbo–oriented demo graph with clean node bundles
 
-### OOP Animal Node 🐾
-Generates an animal's type, color and action, with randomization support.
+## Included nodes
 
-### OOP Environment Node ⛅
-Sets the time of day and the scene mood, with randomization support.
-
-### OOP Node 💫
-Assembles every connected section into one structured prompt and encodes it into `CONDITIONING` (plus the raw `STRING`) using whatever text encoder the checkpoint provides, so it works for SDXL, SD1.5, Flux, Flux2, Flux3, Krea2, Ernie and any other model whose CLIP/text-encoder output you connect. Every section is optional, so disconnecting one drops its line. The `clip_skip` widget defaults to `0`, keeping the layer the checkpoint loaded (already `-2` on SDXL); only set it negative to re-encode CLIP-style encoders from another layer.
-
-### Prompt Assembly
-- Each leaf node emits `key:value` pairs joined with `, `; `OOPNode` prefixes each section with its label (`Style:`, `Perspective:`, `Person:`, `Animal:`, `Location:`, `Environment:`) and joins the sections with newlines.
-- `OOPPersonNode` nests its details as bullet lines (`*  `), so the person block sits under `Person:`.
-- The first entry of every dropdown is a single space (`" "`), meaning "no value": that pair, or an entire section, is left out of the prompt.
-- Keeping **randomize** off holds the values steady; turning it on redraws them on every run.
-
-### Requirements
-Python 3.x
-ComfyUI (This set of nodes is designed to be used in the ComfyUI environment)
-#### Installation
-
-    cd custom_nodes
-
-Clone the repository:
-
-    git clone https://github.com/0xRavenBlack/ComfyUI-OOP
-
-Restart ComfyUI to load the new nodes.
-
-#### Demo workflow dependencies
-The saved graph in `workflow/ComfyUIOOP.json` uses nodes that are **not** part of this package, so it only loads once they are installed too:
-
-| Node in the graph | Where to get it | Core replacement |
+| Node | Purpose | Output / Section |
 |---|---|---|
-| `SDXL Quick Empty Latent (WLSH)` | [wallish77/wlsh_nodes](https://github.com/wallish77/wlsh_nodes) | `Empty Latent Image` |
-| `ShowText|pysssss` | `comfyui-custom-scripts` (Comfy Registry) | `Save Text` |
-| `CheckpointLoaderSimple`, `CLIP Text Encode`, `KSampler`, `VAEDecode`, `PreviewImage`, `Conditioning Zero Out` | shipped with ComfyUI | — |
+| **OOP Style** 🎨 | Base/secondary visual style (+ randomize) | `Style:` |
+| **OOP View** 📐 | Shot type, camera angle, background blur (+ randomize) | `Perspective:` |
+| **OOP Person** 👤 | Aggregates person attributes into a bullet block | `Person:` |
+| **OOP Hair** 🦰 | Hair style and primary/secondary colors (+ randomize) | `Person > Hair` |
+| **OOP Eyes** 👀 | Eye shape and color (+ randomize) | `Person > Eyes` |
+| **OOP Mouth** 👄 | Mouth shape, size, opening (+ randomize) | `Person > Mouth` |
+| **OOP Expression** 🙂 | Emotion, intensity, gaze (+ randomize) | `Person > Expression` |
+| **OOP Clothing** 🥼 | Top/bottom garment types and colors (+ randomize) | `Person > Clothes` |
+| **OOP Pose** 🧍 | Body, hand, and leg pose (+ randomize) | `Person > Poses` |
+| **OOP Animal** 🐾 | Animal type, color, action (+ randomize) | `Animal:` |
+| **OOP Location** 🌍 | Scene location and key object (+ randomize) | `Location:` |
+| **OOP Environment** ⛅ | Time of day and mood (+ randomize) | `Environment:` |
+| **OOP Lighting** 💡 | Light type, direction, intensity (+ randomize) | `Lighting:` |
+| **OOP Background** 🖼️ | Background setting, detail, color mood (+ randomize) | `Background:` |
+| **OOP Node** 💫 | Assembles all connected sections and encodes conditioning | `CONDITIONING` + `STRING` |
 
-The OOP nodes themselves need no extras: only the example workflow does.
+## How it works
 
-#### Example
-For example, consider the following prompt using the new OOP syntax:
+1. **Leaf nodes** emit `key:value` pairs (joined with `, `, in fixed field order).
+2. **`OOPPersonNode`** collects person sub-sections and formats them as bullet lines:
+   - `*  Hair: ...`
+   - `*  Expression: ...` (optional)
+3. **`OOPNode`** prefixes connected sections with labels and joins them with newlines to produce the final prompt, then encodes it via the connected `CLIP`.
+4. **Blank values** use a single-space sentinel (`" "`) and are omitted from output; if a section becomes empty, it is dropped.
+
+### Prompt format notes
+
+- Section labels used by `OOPNode`: `Style`, `Perspective`, `Person`, `Animal`, `Location`, `Environment`, `Lighting`, `Background`
+- `OOPNode.clip_skip` defaults to `0` (keep the layer loaded by the checkpoint/model). Set a negative value only when you intentionally want to re-encode from a specific CLIP layer.
+- All section inputs are optional — connect only what you need.
+
+## Sample workflow
+
+A demo workflow is included at:
+
+- `workflow/ComfyUIOOP.json`
+
+The provided sample is arranged with **clean node bundles** (model bundle, OOP scene/person builders, prompt assembly, sampling/decode/save) and is oriented around a **Krea 2 Turbo** text-to-image setup while showcasing the OOP nodes and the new `Expression`, `Lighting`, and `Background` sections.
+
+### Workflow dependencies
+
+**OOP nodes themselves:** no extra Python dependencies beyond ComfyUI.
+
+**Demo workflow may use nodes outside this package:**
+
+| Node in demo graph | Source | Notes |
+|---|---|---|
+| `ShowText|pysssss` | `comfyui-custom-scripts` (ComfyUI Manager / Registry) | Optional prompt preview; remove/replace if not installed |
+| `UNETLoader`, `CLIPLoader`, `VAELoader`, `LoraLoaderModelOnly`, `ModelSamplingFlux`, `CFGGuider`, `SamplerCustomAdvanced`, `KSamplerSelect`, `BasicScheduler`, `RandomNoise`, `EmptyLatentImage`, `VAEDecode`, `SaveImage`, `ConditioningZeroOut` | Core ComfyUI | Required for the included Krea 2 sample pipeline |
+
+### Krea 2 model files (for the included sample workflow)
+
+Place the referenced files in your ComfyUI model folders (filenames can be adjusted in the loader nodes):
+
+- `diffusion_models/krea2_turbo_int8_convrot.safetensors`
+- `text_encoders/qwen3vl_4b_fp8_scaled.safetensors` (CLIP type: `krea2`)
+- `vae/qwen_image_vae.safetensors`
+- `loras/krea2_style_reference.safetensors` *(optional, strength `1.0` in sample)*
+
+## Installation
+
+### ComfyUI Manager
+Install/search for **ComfyUI-OOP** (if available in your manager index), then restart ComfyUI.
+
+### Manual install
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/0xRavenBlack/ComfyUI-OOP
 ```
-    Style: base_style:PhotoRAW
-    Perspective: shot:Portrait, angle:Normal, background:Blur
-    Person: 
-    *  BodyShape: Curvy
-    *  Gender: Female
-    *  Age: 20-29 Years
-    *  Ethnicity: Asian
-    *  Hair: color:Black, style:Short
-    *  Eyes: shape:Round, color:Brown
-    *  Mouth: shape:Neutral
-    *  Clothes: top_garment:Sweater, bottom_garment:Jeans
-    *  Poses: body:Stand, hands:Stretch, legs:AgainstWall
-    Animal: type:Cat, color:Black, action:Lying
-    Location: location:City, object:Statue
-    Environment: time:Night, mood:FullMoon
-```
 
-The same prompt as rendered in ComfyUI: ![OOP prompt example](https://github.com/0xRavenBlack/ComfyUI-OOP/blob/main/screenshot/prompt.png?raw=true)
+Restart ComfyUI. The nodes will appear under the **`Object-Oriented Prompting`** category.
 
-#### License
-This project is licensed under the MIT License - see the LICENSE file for details.
+## Requirements
 
-#### Contributing
-If you wish to contribute to this project, feel free to fork the repository and submit a pull request with your improvements!
+- **ComfyUI** (recent version recommended for V3 node support and the included Krea 2 sample workflow nodes)
+- **Python 3.x** (as provided by your ComfyUI environment)
+
+## Tips
+
+- Start with only a few sections connected, then add `Lighting` / `Background` / `Expression` to refine composition and mood.
+- Use `randomize` toggles for exploration; turn them off to lock a prompt for reproducible iterations.
+- If you swap model families/checkpoints, keep `clip_skip` at `0` unless you have a specific reason to change it.
+
+## Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a focused branch/change
+3. Keep node IDs/input names and prompt format compatibility in mind
+4. Open a pull request with a clear description of the behavior change
+
+## License
+
+MIT — see [LICENSE](LICENSE).
